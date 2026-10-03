@@ -1,0 +1,39 @@
+# ==========================================
+# SERVER SIDE DEPS & SECRETS
+# ==========================================
+server/node_modules/
+server/.env
+server/.env.*
+!server/.env.example
+
+# ==========================================
+# CLIENT SIDE (BUILD & DEPS)
+# ==========================================
+client/node_modules/
+client/dist/
+client/dist-ssr/
+client/*.local
+
+# ==========================================
+# CLIENT SIDE LOGS
+# ==========================================
+client/logs/
+client/*.log
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
+client/pnpm-debug.log*
+client/lerna-debug.log*
+
+# ==========================================
+# SYSTEM & EDITOR FILES (Applies globally across the workspace)
+# ==========================================
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
