@@ -197,7 +197,7 @@ const processDemoPayment = async (req, res) => {
   await createNotification({
     recipient: payment.renter,
     type: "payment_partial",
-    title: "Partial Payment Received",
+    title: "Partial Payment completed",
     message: `₹${paymentAmount} paid successfully. Remaining amount: ₹${payment.remainingAmount}.`,
     relatedBooking: payment.booking,
     relatedVehicle: booking.vehicle._id

@@ -7,61 +7,45 @@ const {
   getAllUsers,
   getAllVehiclesAdmin,
   getAllBookingsAdmin,
-  getAllPaymentsAdmin
+  getAllPaymentsAdmin,
+  getVehicleVerificationDocument,
 } = require("../controllers/AdminController");
 
-const { protect } = require("../middleware/AuthMiddleware");
-const { authorizeRoles } = require("../middleware/RoleMiddleware");
+const {protect} = require("../middleware/AuthMiddleware");
+
+const {authorizeRoles} = require("../middleware/RoleMiddleware");
 
 const router = express.Router();
 
-router.get(
-  "/dashboard",
-  protect,
-  authorizeRoles("admin"),
-  getDashboardStats
-);
+router.get("/dashboard", protect, authorizeRoles("admin"), getDashboardStats);
 
-router.get(
-  "/users",
-  protect,
-  authorizeRoles("admin"),
-  getAllUsers
-);
+router.get("/users", protect, authorizeRoles("admin"), getAllUsers);
 
-router.get(
-  "/vehicles",
-  protect,
-  authorizeRoles("admin"),
-  getAllVehiclesAdmin
-);
+router.get("/vehicles", protect, authorizeRoles("admin"), getAllVehiclesAdmin);
 
-router.get(
-  "/bookings",
-  protect,
-  authorizeRoles("admin"),
-  getAllBookingsAdmin
-);
+router.get("/bookings", protect, authorizeRoles("admin"), getAllBookingsAdmin);
 
-router.get(
-  "/payments",
-  protect,
-  authorizeRoles("admin"),
-  getAllPaymentsAdmin
-);
+router.get("/payments", protect, authorizeRoles("admin"), getAllPaymentsAdmin);
 
 router.get(
   "/vehicles/pending-verifications",
   protect,
   authorizeRoles("admin"),
-  getPendingVerifications
+  getPendingVerifications,
+);
+
+router.get(
+  "/vehicles/:id/verification/:document",
+  protect,
+  authorizeRoles("admin"),
+  getVehicleVerificationDocument,
 );
 
 router.put(
   "/vehicles/:id/verification",
   protect,
   authorizeRoles("admin"),
-  reviewVehicleVerification
+  reviewVehicleVerification,
 );
 
 module.exports = router;

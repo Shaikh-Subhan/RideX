@@ -8,16 +8,17 @@ const {
   deleteVehicle,
   updateVehicleAvailability,
   submitVehicleVerification,
-  getAllVehicles
+  getAllVehicles,
 } = require("../controllers/VehicleController");
 
-const {
-  protect
-} = require("../middleware/AuthMiddleware");
+const {protect} = require("../middleware/AuthMiddleware");
+
+const {authorizeRoles} = require("../middleware/RoleMiddleware");
 
 const {
-  authorizeRoles
-} = require("../middleware/RoleMiddleware");
+  uploadVehicleImages,
+  uploadVerificationDocuments,
+} = require("../middleware/UploadMiddleware");
 
 const router = express.Router();
 
@@ -25,52 +26,39 @@ router.post(
   "/",
   protect,
   authorizeRoles("owner"),
-  addVehicle
+  uploadVehicleImages,
+  addVehicle,
 );
 
-router.get(
-  "/",
-  getAllVehicles
-);
+router.get("/", getAllVehicles);
 
-router.get(
-  "/my-vehicles",
-  protect,
-  authorizeRoles("owner"),
-  getMyVehicles
-);
+router.get("/my-vehicles", protect, authorizeRoles("owner"), getMyVehicles);
 
-router.get(
-  "/:id",
-  getVehicleById
-);
+router.get("/:id", getVehicleById);
 
 router.put(
   "/:id",
   protect,
   authorizeRoles("owner"),
-  updateVehicle
+  uploadVehicleImages,
+  updateVehicle,
 );
 
 router.put(
   "/:id/availability",
   protect,
   authorizeRoles("owner"),
-  updateVehicleAvailability
+  updateVehicleAvailability,
 );
 
 router.put(
   "/:id/verification",
   protect,
   authorizeRoles("owner"),
-  submitVehicleVerification
+  uploadVerificationDocuments,
+  submitVehicleVerification,
 );
 
-router.delete(
-  "/:id",
-  protect,
-  authorizeRoles("owner"),
-  deleteVehicle
-);
+router.delete("/:id", protect, authorizeRoles("owner"), deleteVehicle);
 
 module.exports = router;

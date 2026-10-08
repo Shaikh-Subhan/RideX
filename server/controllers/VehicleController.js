@@ -2,11 +2,76 @@ const mongoose = require("mongoose");
 const Vehicle = require("../models/Vehicle");
 const Booking = require("../models/Booking");
 const User = require("../models/User");
+const cloudinary = require("../config/cloudinary");
 const {createNotification} = require("./NotificationController");
 
+const uploadImageToCloudinary = (file) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "ridex/vehicles",
+        resource_type: "image",
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      },
+    );
+
+    stream.end(file.buffer);
+  });
+};
+
+const uploadPdfToCloudinary = (file, folder) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+        resource_type: "raw",
+        type: "authenticated",
+        format: "pdf",
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      },
+    );
+
+    stream.end(file.buffer);
+  });
+};
+
+const deleteCloudinaryFile = async (
+  publicId,
+  resourceType = "image",
+  type = "upload",
+) => {
+  if (!publicId) {
+    return;
+  }
+
+  try {
+    await cloudinary.uploader.destroy(publicId, {
+      resource_type: resourceType,
+      type,
+    });
+  } catch (error) {
+    console.error("Cloudinary delete error:", error.message);
+  }
+};
+
 const addVehicle = async (req, res) => {
+  const uploadedImages = [];
+
   try {
     const {
+      vehicleNumber,
       make,
       model,
       year,
@@ -18,13 +83,13 @@ const addVehicle = async (req, res) => {
       rentalPricePerDay,
       location,
       description,
-      images,
       driverAvailable,
       driverPricePerDay,
       features,
     } = req.body;
 
     if (
+      !vehicleNumber ||
       !make ||
       !model ||
       !year ||
@@ -41,8 +106,33 @@ const addVehicle = async (req, res) => {
       });
     }
 
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        message: "At least one vehicle image is required",
+      });
+    }
+
+    for (const file of req.files) {
+      const result = await uploadImageToCloudinary(file);
+
+      uploadedImages.push({
+        url: result.secure_url,
+        publicId: result.public_id,
+      });
+    }
+
+    const parsedFeatures =
+      typeof features === "string" ?
+        features
+          .split(",")
+          .map((feature) => feature.trim())
+          .filter(Boolean)
+      : Array.isArray(features) ? features
+      : [];
+
     const vehicle = await Vehicle.create({
       owner: req.user._id,
+      vehicleNumber,
       make,
       model,
       year,
@@ -54,10 +144,10 @@ const addVehicle = async (req, res) => {
       rentalPricePerDay,
       location,
       description,
-      images,
-      driverAvailable,
-      driverPricePerDay,
-      features,
+      images: uploadedImages,
+      driverAvailable: driverAvailable === true || driverAvailable === "true",
+      driverPricePerDay: Number(driverPricePerDay) || 0,
+      features: parsedFeatures,
     });
 
     res.status(201).json({
@@ -65,10 +155,14 @@ const addVehicle = async (req, res) => {
       vehicle,
     });
   } catch (error) {
+    for (const image of uploadedImages) {
+      await deleteCloudinaryFile(image.publicId);
+    }
+
     console.error("Add vehicle error:", error.message);
 
     res.status(500).json({
-      message: "Server error",
+      message: "Failed to add vehicle",
     });
   }
 };
@@ -132,6 +226,8 @@ const getVehicleById = async (req, res) => {
 };
 
 const updateVehicle = async (req, res) => {
+  const newlyUploadedImages = [];
+
   try {
     const vehicle = await Vehicle.findById(req.params.id);
 
@@ -148,6 +244,7 @@ const updateVehicle = async (req, res) => {
     }
 
     const {
+      vehicleNumber,
       make,
       model,
       year,
@@ -159,11 +256,14 @@ const updateVehicle = async (req, res) => {
       rentalPricePerDay,
       location,
       description,
-      images,
       driverAvailable,
       driverPricePerDay,
       features,
     } = req.body;
+
+    if (vehicleNumber !== undefined) {
+      vehicle.vehicleNumber = vehicleNumber;
+    }
 
     if (make !== undefined) {
       vehicle.make = make;
@@ -209,20 +309,39 @@ const updateVehicle = async (req, res) => {
       vehicle.description = description;
     }
 
-    if (images !== undefined) {
-      vehicle.images = images;
-    }
-
     if (driverAvailable !== undefined) {
-      vehicle.driverAvailable = driverAvailable;
+      vehicle.driverAvailable =
+        driverAvailable === true || driverAvailable === "true";
     }
 
     if (driverPricePerDay !== undefined) {
-      vehicle.driverPricePerDay = driverPricePerDay;
+      vehicle.driverPricePerDay = Number(driverPricePerDay) || 0;
     }
 
     if (features !== undefined) {
-      vehicle.features = features;
+      vehicle.features =
+        typeof features === "string" ?
+          features
+            .split(",")
+            .map((feature) => feature.trim())
+            .filter(Boolean)
+        : Array.isArray(features) ? features
+        : [];
+    }
+
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const result = await uploadImageToCloudinary(file);
+
+        const image = {
+          url: result.secure_url,
+          publicId: result.public_id,
+        };
+
+        newlyUploadedImages.push(image);
+      }
+
+      vehicle.images.push(...newlyUploadedImages);
     }
 
     const updatedVehicle = await vehicle.save();
@@ -232,10 +351,14 @@ const updateVehicle = async (req, res) => {
       vehicle: updatedVehicle,
     });
   } catch (error) {
+    for (const image of newlyUploadedImages) {
+      await deleteCloudinaryFile(image.publicId);
+    }
+
     console.error("Update vehicle error:", error.message);
 
     res.status(500).json({
-      message: "Server error",
+      message: "Failed to update vehicle",
     });
   }
 };
@@ -254,6 +377,26 @@ const deleteVehicle = async (req, res) => {
       return res.status(403).json({
         message: "You can only delete your own vehicle",
       });
+    }
+
+    for (const image of vehicle.images) {
+      await deleteCloudinaryFile(image.publicId);
+    }
+
+    if (vehicle.verification.registrationDocument.publicId) {
+      await deleteCloudinaryFile(
+        vehicle.verification.registrationDocument.publicId,
+        "raw",
+        "authenticated",
+      );
+    }
+
+    if (vehicle.verification.insuranceDocument.publicId) {
+      await deleteCloudinaryFile(
+        vehicle.verification.insuranceDocument.publicId,
+        "raw",
+        "authenticated",
+      );
     }
 
     await vehicle.deleteOne();
@@ -340,6 +483,8 @@ const updateVehicleAvailability = async (req, res) => {
 };
 
 const submitVehicleVerification = async (req, res) => {
+  const uploadedDocuments = [];
+
   try {
     const vehicle = await Vehicle.findById(req.params.id);
 
@@ -361,22 +506,67 @@ const submitVehicleVerification = async (req, res) => {
       });
     }
 
-    const {registrationDocument, insuranceDocument} = req.body;
+    const registrationFile = req.files?.registrationDocument?.[0];
 
-    if (
-      typeof registrationDocument !== "string" ||
-      !registrationDocument.trim() ||
-      typeof insuranceDocument !== "string" ||
-      !insuranceDocument.trim()
-    ) {
+    const insuranceFile = req.files?.insuranceDocument?.[0];
+
+    if (!registrationFile || !insuranceFile) {
       return res.status(400).json({
         message: "Registration and insurance documents are required",
       });
     }
 
-    vehicle.verification.registrationDocument = registrationDocument.trim();
+    const registrationResult = await uploadPdfToCloudinary(
+      registrationFile,
+      "ridex/verification",
+    );
 
-    vehicle.verification.insuranceDocument = insuranceDocument.trim();
+    uploadedDocuments.push({
+      publicId: registrationResult.public_id,
+      resourceType: "raw",
+      type: "authenticated",
+    });
+
+    const insuranceResult = await uploadPdfToCloudinary(
+      insuranceFile,
+      "ridex/verification",
+    );
+
+    uploadedDocuments.push({
+      publicId: insuranceResult.public_id,
+      resourceType: "raw",
+      type: "authenticated",
+    });
+
+    if (vehicle.verification.registrationDocument.publicId) {
+      await deleteCloudinaryFile(
+        vehicle.verification.registrationDocument.publicId,
+        "raw",
+        "authenticated",
+      );
+    }
+
+    if (vehicle.verification.insuranceDocument.publicId) {
+      await deleteCloudinaryFile(
+        vehicle.verification.insuranceDocument.publicId,
+        "raw",
+        "authenticated",
+      );
+    }
+
+    vehicle.verification.registrationDocument = {
+      publicId: registrationResult.public_id,
+      resourceType: "raw",
+      type: "authenticated",
+      originalName: registrationFile.originalname,
+    };
+
+    vehicle.verification.insuranceDocument = {
+      publicId: insuranceResult.public_id,
+      resourceType: "raw",
+      type: "authenticated",
+      originalName: insuranceFile.originalname,
+    };
 
     vehicle.verification.status = "pending";
     vehicle.verification.verifiedAt = null;
@@ -399,13 +589,26 @@ const submitVehicleVerification = async (req, res) => {
 
     res.status(200).json({
       message: "Vehicle verification submitted successfully",
-      verification: vehicle.verification,
+      verification: {
+        status: vehicle.verification.status,
+        registrationDocument:
+          vehicle.verification.registrationDocument.originalName,
+        insuranceDocument: vehicle.verification.insuranceDocument.originalName,
+      },
     });
   } catch (error) {
+    for (const document of uploadedDocuments) {
+      await deleteCloudinaryFile(
+        document.publicId,
+        document.resourceType,
+        document.type,
+      );
+    }
+
     console.error("Vehicle verification error:", error.message);
 
     res.status(500).json({
-      message: "Server error",
+      message: "Failed to submit vehicle verification",
     });
   }
 };

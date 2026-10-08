@@ -1,24 +1,20 @@
 const mongoose = require("mongoose");
+const cloudinary = require("../config/cloudinary");
 
 const User = require("../models/User");
 const Vehicle = require("../models/Vehicle");
 const Booking = require("../models/Booking");
 const Payment = require("../models/Payment");
-const {
-  createNotification
-} = require("./NotificationController");
+const {createNotification} = require("./NotificationController");
 
 const getPagination = (page, limit) => {
   const parsedPage = Math.max(parseInt(page) || 1, 1);
-  const parsedLimit = Math.min(
-    Math.max(parseInt(limit) || 10, 1),
-    50
-  );
+  const parsedLimit = Math.min(Math.max(parseInt(limit) || 10, 1), 50);
 
   return {
     page: parsedPage,
     limit: parsedLimit,
-    skip: (parsedPage - 1) * parsedLimit
+    skip: (parsedPage - 1) * parsedLimit,
   };
 };
 
@@ -29,13 +25,13 @@ const reviewVehicleVerification = async (req, res) => {
 
     if (!mongoose.isValidObjectId(id)) {
       return res.status(400).json({
-        message: "Invalid vehicle ID"
+        message: "Invalid vehicle ID",
       });
     }
 
     if (!["verified", "rejected"].includes(status)) {
       return res.status(400).json({
-        message: "Status must be verified or rejected"
+        message: "Status must be verified or rejected",
       });
     }
 
@@ -43,64 +39,45 @@ const reviewVehicleVerification = async (req, res) => {
 
     if (!vehicle) {
       return res.status(404).json({
-        message: "Vehicle not found"
+        message: "Vehicle not found",
       });
     }
 
     if (vehicle.verification.status !== "pending") {
       return res.status(400).json({
-        message: "Only pending vehicles can be reviewed"
+        message: "Only pending vehicles can be reviewed",
       });
     }
 
     if (
-      !vehicle.verification.registrationDocument ||
-      !vehicle.verification.insuranceDocument
+      !vehicle.verification.registrationDocument?.publicId ||
+      !vehicle.verification.insuranceDocument?.publicId
     ) {
       return res.status(400).json({
-        message:
-          "Both registration and insurance documents are required"
+        message: "Both registration and insurance documents are required",
       });
     }
 
     vehicle.verification.status = status;
-    vehicle.verification.verifiedAt =
-      status === "verified" ? new Date() : null;
+    vehicle.verification.verifiedAt = status === "verified" ? new Date() : null;
 
     await vehicle.save();
 
-    if (status === "verified") {
-      await createNotification({
-        recipient: vehicle.owner,
-        type: "vehicle_verification_approved",
-        title: "Vehicle Verification Approved",
-        message: `Your ${vehicle.make} ${vehicle.model} has been verified successfully.`,
-        relatedVehicle: vehicle._id
-      });
-    }
-
-    if (status === "rejected") {
-      await createNotification({
-        recipient: vehicle.owner,
-        type: "vehicle_verification_rejected",
-        title: "Vehicle Verification Rejected",
-        message: `Your ${vehicle.make} ${vehicle.model} verification request has been rejected. Please review your documents and submit again.`,
-        relatedVehicle: vehicle._id
-      });
-    }
-
     return res.status(200).json({
       message: `Vehicle ${status} successfully`,
-      vehicle
+      vehicle: {
+        _id: vehicle._id,
+        verification: {
+          status: vehicle.verification.status,
+          verifiedAt: vehicle.verification.verifiedAt,
+        },
+      },
     });
   } catch (error) {
-    console.error(
-      "Review vehicle verification error:",
-      error.message
-    );
+    console.error("Review vehicle verification error:", error.message);
 
     return res.status(500).json({
-      message: "Server error"
+      message: "Server error",
     });
   }
 };
@@ -109,32 +86,31 @@ const getPendingVerifications = async (req, res) => {
   try {
     const vehicles = await Vehicle.find({
       "verification.status": "pending",
-      "verification.registrationDocument": {
-        $ne: ""
+      "verification.registrationDocument.publicId": {
+        $exists: true,
+        $ne: "",
       },
-      "verification.insuranceDocument": {
-        $ne: ""
-      }
+      "verification.insuranceDocument.publicId": {
+        $exists: true,
+        $ne: "",
+      },
     })
-      .populate(
-        "owner",
-        "name email phone profileImage isVerified"
+      .select(
+        "owner make model year vehicleType rentalPricePerDay location images driverAvailable averageRating totalReviews verification.status verification.registrationDocument.originalName verification.insuranceDocument.originalName verification.verifiedAt createdAt updatedAt",
       )
-      .sort({ updatedAt: -1 });
+      .populate("owner", "name email phone profileImage isVerified")
+      .sort({updatedAt: -1});
 
     return res.status(200).json({
       message: "Pending vehicle verifications fetched successfully",
       count: vehicles.length,
-      vehicles
+      vehicles,
     });
   } catch (error) {
-    console.error(
-      "Get pending verifications error:",
-      error.message
-    );
+    console.error("Get pending verifications error:", error.message);
 
     return res.status(500).json({
-      message: "Server error"
+      message: "Server error",
     });
   }
 };
@@ -161,124 +137,120 @@ const getDashboardStats = async (req, res) => {
       partialPayments,
       paidPayments,
       failedPayments,
-      refundedPayments
+      refundedPayments,
     ] = await Promise.all([
       User.countDocuments(),
 
       User.countDocuments({
-        roles: "renter"
+        roles: "renter",
       }),
 
       User.countDocuments({
-        roles: "owner"
+        roles: "owner",
       }),
 
       User.countDocuments({
-        roles: "admin"
+        roles: "admin",
       }),
 
       Vehicle.countDocuments(),
 
       Vehicle.countDocuments({
-        "verification.status": "verified"
+        "verification.status": "verified",
       }),
 
       Vehicle.countDocuments({
-        "verification.status": "pending"
+        "verification.status": "pending",
       }),
 
       Vehicle.countDocuments({
-        "verification.status": "rejected"
+        "verification.status": "rejected",
       }),
 
       Booking.countDocuments(),
 
       Booking.countDocuments({
-        status: "pending"
+        status: "pending",
       }),
 
       Booking.countDocuments({
-        status: "approved"
+        status: "approved",
       }),
 
       Booking.countDocuments({
-        status: "rejected"
+        status: "rejected",
       }),
 
       Booking.countDocuments({
-        status: "cancelled"
+        status: "cancelled",
       }),
 
       Booking.countDocuments({
-        status: "completed"
+        status: "completed",
       }),
 
       Payment.countDocuments(),
 
       Payment.countDocuments({
-        status: "created"
+        status: "created",
       }),
 
       Payment.countDocuments({
-        status: "partially_paid"
+        status: "partially_paid",
       }),
 
       Payment.countDocuments({
-        status: "paid"
+        status: "paid",
       }),
 
       Payment.countDocuments({
-        status: "failed"
+        status: "failed",
       }),
 
       Payment.countDocuments({
-        status: "refunded"
-      })
+        status: "refunded",
+      }),
     ]);
 
     const collectedResult = await Payment.aggregate([
       {
         $match: {
           status: {
-            $in: ["partially_paid", "paid"]
-          }
-        }
+            $in: ["partially_paid", "paid"],
+          },
+        },
       },
       {
         $group: {
           _id: null,
           amount: {
-            $sum: "$paidAmount"
-          }
-        }
-      }
+            $sum: "$paidAmount",
+          },
+        },
+      },
     ]);
 
     const refundedResult = await Payment.aggregate([
       {
         $match: {
-          status: "refunded"
-        }
+          status: "refunded",
+        },
       },
       {
         $group: {
           _id: null,
           amount: {
-            $sum: "$paidAmount"
-          }
-        }
-      }
+            $sum: "$paidAmount",
+          },
+        },
+      },
     ]);
 
     const totalCollectedAmount =
-      collectedResult.length > 0
-        ? collectedResult[0].amount
-        : 0;
+      collectedResult.length > 0 ? collectedResult[0].amount : 0;
 
     const totalRefundedAmount =
-      refundedResult.length > 0
-        ? refundedResult[0].amount
-        : 0;
+      refundedResult.length > 0 ? refundedResult[0].amount : 0;
 
     return res.status(200).json({
       message: "Admin dashboard statistics fetched successfully",
@@ -287,14 +259,14 @@ const getDashboardStats = async (req, res) => {
         total: totalUsers,
         renters: totalRenters,
         owners: totalOwners,
-        admins: totalAdmins
+        admins: totalAdmins,
       },
 
       vehicles: {
         total: totalVehicles,
         verified: verifiedVehicles,
         pending: pendingVehicles,
-        rejected: rejectedVehicles
+        rejected: rejectedVehicles,
       },
 
       bookings: {
@@ -303,7 +275,7 @@ const getDashboardStats = async (req, res) => {
         approved: approvedBookings,
         rejected: rejectedBookings,
         cancelled: cancelledBookings,
-        completed: completedBookings
+        completed: completedBookings,
       },
 
       payments: {
@@ -314,46 +286,34 @@ const getDashboardStats = async (req, res) => {
         failed: failedPayments,
         refunded: refundedPayments,
         totalCollectedAmount,
-        totalRefundedAmount
-      }
+        totalRefundedAmount,
+      },
     });
   } catch (error) {
-    console.error(
-      "Get dashboard stats error:",
-      error.message
-    );
+    console.error("Get dashboard stats error:", error.message);
 
     return res.status(500).json({
-      message: "Server error"
+      message: "Server error",
     });
   }
 };
 
 const getAllUsers = async (req, res) => {
   try {
-    const {
-      role,
-      search,
-      page,
-      limit
-    } = req.query;
+    const {role, search, page, limit} = req.query;
 
-    const validRoles = [
-      "renter",
-      "owner",
-      "admin"
-    ];
+    const validRoles = ["renter", "owner", "admin"];
 
     if (role && !validRoles.includes(role)) {
       return res.status(400).json({
-        message: "Invalid role"
+        message: "Invalid role",
       });
     }
 
     const {
       page: currentPage,
       limit: currentLimit,
-      skip
+      skip,
     } = getPagination(page, limit);
 
     const query = {};
@@ -367,28 +327,28 @@ const getAllUsers = async (req, res) => {
         {
           name: {
             $regex: search,
-            $options: "i"
-          }
+            $options: "i",
+          },
         },
         {
           email: {
             $regex: search,
-            $options: "i"
-          }
-        }
+            $options: "i",
+          },
+        },
       ];
     }
 
     const [users, total] = await Promise.all([
       User.find(query)
         .select(
-          "name email phone roles profileImage isVerified createdAt updatedAt"
+          "name email phone roles profileImage isVerified createdAt updatedAt",
         )
-        .sort({ createdAt: -1 })
+        .sort({createdAt: -1})
         .skip(skip)
         .limit(currentLimit),
 
-      User.countDocuments(query)
+      User.countDocuments(query),
     ]);
 
     return res.status(200).json({
@@ -397,57 +357,40 @@ const getAllUsers = async (req, res) => {
         page: currentPage,
         limit: currentLimit,
         total,
-        totalPages: Math.ceil(
-          total / currentLimit
-        )
+        totalPages: Math.ceil(total / currentLimit),
       },
       filters: {
         role: role || "all",
-        search: search || ""
+        search: search || "",
       },
       count: users.length,
-      users
+      users,
     });
   } catch (error) {
-    console.error(
-      "Get all users error:",
-      error.message
-    );
+    console.error("Get all users error:", error.message);
 
     return res.status(500).json({
-      message: "Server error"
+      message: "Server error",
     });
   }
 };
 
 const getAllVehiclesAdmin = async (req, res) => {
   try {
-    const {
-      status,
-      search,
-      page,
-      limit
-    } = req.query;
+    const {status, search, page, limit} = req.query;
 
-    const validStatuses = [
-      "pending",
-      "verified",
-      "rejected"
-    ];
+    const validStatuses = ["pending", "verified", "rejected"];
 
-    if (
-      status &&
-      !validStatuses.includes(status)
-    ) {
+    if (status && !validStatuses.includes(status)) {
       return res.status(400).json({
-        message: "Invalid verification status"
+        message: "Invalid verification status",
       });
     }
 
     const {
       page: currentPage,
       limit: currentLimit,
-      skip
+      skip,
     } = getPagination(page, limit);
 
     const query = {};
@@ -461,38 +404,35 @@ const getAllVehiclesAdmin = async (req, res) => {
         {
           make: {
             $regex: search,
-            $options: "i"
-          }
+            $options: "i",
+          },
         },
         {
           model: {
             $regex: search,
-            $options: "i"
-          }
+            $options: "i",
+          },
         },
         {
           location: {
             $regex: search,
-            $options: "i"
-          }
-        }
+            $options: "i",
+          },
+        },
       ];
     }
 
     const [vehicles, total] = await Promise.all([
       Vehicle.find(query)
         .select(
-          "owner make model year vehicleType fuelType transmission seatingCapacity rentalPricePerDay location images driverAvailable averageRating totalReviews verification.status verification.verifiedAt createdAt updatedAt"
+          "owner make model year vehicleType fuelType transmission seatingCapacity rentalPricePerDay location images driverAvailable averageRating totalReviews verification.status verification.registrationDocument.originalName verification.insuranceDocument.originalName verification.verifiedAt createdAt updatedAt",
         )
-        .populate(
-          "owner",
-          "name email phone profileImage isVerified"
-        )
-        .sort({ createdAt: -1 })
+        .populate("owner", "name email phone profileImage isVerified")
+        .sort({createdAt: -1})
         .skip(skip)
         .limit(currentLimit),
 
-      Vehicle.countDocuments(query)
+      Vehicle.countDocuments(query),
     ]);
 
     return res.status(200).json({
@@ -501,44 +441,34 @@ const getAllVehiclesAdmin = async (req, res) => {
         page: currentPage,
         limit: currentLimit,
         total,
-        totalPages: Math.ceil(
-          total / currentLimit
-        )
+        totalPages: Math.ceil(total / currentLimit),
       },
       filters: {
         status: status || "all",
-        search: search || ""
+        search: search || "",
       },
       count: vehicles.length,
-      vehicles
+      vehicles,
     });
   } catch (error) {
-    console.error(
-      "Get all admin vehicles error:",
-      error.message
-    );
+    console.error("Get all admin vehicles error:", error.message);
 
     return res.status(500).json({
-      message: "Server error"
+      message: "Server error",
     });
   }
 };
 
 const getAllBookingsAdmin = async (req, res) => {
   try {
-    const {
-      status,
-      paymentStatus,
-      page,
-      limit
-    } = req.query;
+    const {status, paymentStatus, page, limit} = req.query;
 
     const validStatuses = [
       "pending",
       "approved",
       "rejected",
       "cancelled",
-      "completed"
+      "completed",
     ];
 
     const validPaymentStatuses = [
@@ -546,31 +476,25 @@ const getAllBookingsAdmin = async (req, res) => {
       "pending",
       "partially_paid",
       "paid",
-      "refunded"
+      "refunded",
     ];
 
-    if (
-      status &&
-      !validStatuses.includes(status)
-    ) {
+    if (status && !validStatuses.includes(status)) {
       return res.status(400).json({
-        message: "Invalid booking status"
+        message: "Invalid booking status",
       });
     }
 
-    if (
-      paymentStatus &&
-      !validPaymentStatuses.includes(paymentStatus)
-    ) {
+    if (paymentStatus && !validPaymentStatuses.includes(paymentStatus)) {
       return res.status(400).json({
-        message: "Invalid payment status"
+        message: "Invalid payment status",
       });
     }
 
     const {
       page: currentPage,
       limit: currentLimit,
-      skip
+      skip,
     } = getPagination(page, limit);
 
     const query = {};
@@ -587,17 +511,14 @@ const getAllBookingsAdmin = async (req, res) => {
       Booking.find(query)
         .populate(
           "vehicle",
-          "make model year location rentalPricePerDay averageRating"
+          "make model year location rentalPricePerDay averageRating",
         )
-        .populate(
-          "renter",
-          "name email phone profileImage trustScore"
-        )
-        .sort({ createdAt: -1 })
+        .populate("renter", "name email phone profileImage trustScore")
+        .sort({createdAt: -1})
         .skip(skip)
         .limit(currentLimit),
 
-      Booking.countDocuments(query)
+      Booking.countDocuments(query),
     ]);
 
     return res.status(200).json({
@@ -606,58 +527,46 @@ const getAllBookingsAdmin = async (req, res) => {
         page: currentPage,
         limit: currentLimit,
         total,
-        totalPages: Math.ceil(
-          total / currentLimit
-        )
+        totalPages: Math.ceil(total / currentLimit),
       },
       filters: {
         status: status || "all",
-        paymentStatus: paymentStatus || "all"
+        paymentStatus: paymentStatus || "all",
       },
       count: bookings.length,
-      bookings
+      bookings,
     });
   } catch (error) {
-    console.error(
-      "Get all admin bookings error:",
-      error.message
-    );
+    console.error("Get all admin bookings error:", error.message);
 
     return res.status(500).json({
-      message: "Server error"
+      message: "Server error",
     });
   }
 };
 
 const getAllPaymentsAdmin = async (req, res) => {
   try {
-    const {
-      status,
-      page,
-      limit
-    } = req.query;
+    const {status, page, limit} = req.query;
 
     const validStatuses = [
       "created",
       "partially_paid",
       "paid",
       "failed",
-      "refunded"
+      "refunded",
     ];
 
-    if (
-      status &&
-      !validStatuses.includes(status)
-    ) {
+    if (status && !validStatuses.includes(status)) {
       return res.status(400).json({
-        message: "Invalid payment status"
+        message: "Invalid payment status",
       });
     }
 
     const {
       page: currentPage,
       limit: currentLimit,
-      skip
+      skip,
     } = getPagination(page, limit);
 
     const query = {};
@@ -670,17 +579,14 @@ const getAllPaymentsAdmin = async (req, res) => {
       Payment.find(query)
         .populate(
           "booking",
-          "startDate endDate status paymentStatus totalAmount"
+          "startDate endDate status paymentStatus totalAmount",
         )
-        .populate(
-          "renter",
-          "name email phone profileImage trustScore"
-        )
-        .sort({ createdAt: -1 })
+        .populate("renter", "name email phone profileImage trustScore")
+        .sort({createdAt: -1})
         .skip(skip)
         .limit(currentLimit),
 
-      Payment.countDocuments(query)
+      Payment.countDocuments(query),
     ]);
 
     return res.status(200).json({
@@ -689,24 +595,81 @@ const getAllPaymentsAdmin = async (req, res) => {
         page: currentPage,
         limit: currentLimit,
         total,
-        totalPages: Math.ceil(
-          total / currentLimit
-        )
+        totalPages: Math.ceil(total / currentLimit),
       },
       filters: {
-        status: status || "all"
+        status: status || "all",
       },
       count: payments.length,
-      payments
+      payments,
     });
   } catch (error) {
-    console.error(
-      "Get all admin payments error:",
-      error.message
-    );
+    console.error("Get all admin payments error:", error.message);
 
     return res.status(500).json({
-      message: "Server error"
+      message: "Server error",
+    });
+  }
+};
+
+const getVehicleVerificationDocument = async (req, res) => {
+  try {
+    const {id, document} = req.params;
+
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({
+        message: "Invalid vehicle ID",
+      });
+    }
+
+    const allowedDocuments = ["registrationDocument", "insuranceDocument"];
+
+    if (!allowedDocuments.includes(document)) {
+      return res.status(400).json({
+        message: "Invalid verification document",
+      });
+    }
+
+    const vehicle = await Vehicle.findById(id).select(
+      `verification.${document}`,
+    );
+
+    if (!vehicle) {
+      return res.status(404).json({
+        message: "Vehicle not found",
+      });
+    }
+
+    const documentData = vehicle.verification?.[document];
+
+    if (!documentData?.publicId) {
+      return res.status(404).json({
+        message: "Verification document not found",
+      });
+    }
+
+    const expiresAt = Math.floor(Date.now() / 1000) + 300;
+
+    const url = cloudinary.utils.private_download_url(
+      documentData.publicId,
+      "pdf",
+      {
+        resource_type: documentData.resourceType || "raw",
+        type: documentData.type || "authenticated",
+        expires_at: expiresAt,
+      },
+    );
+
+    return res.status(200).json({
+      message: "Verification document URL generated",
+      url,
+      expiresAt,
+    });
+  } catch (error) {
+    console.error("Get verification document error:", error.message);
+
+    return res.status(500).json({
+      message: "Server error",
     });
   }
 };
@@ -718,5 +681,6 @@ module.exports = {
   getAllUsers,
   getAllVehiclesAdmin,
   getAllBookingsAdmin,
-  getAllPaymentsAdmin
+  getAllPaymentsAdmin,
+  getVehicleVerificationDocument,
 };

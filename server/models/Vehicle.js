@@ -1,189 +1,196 @@
 const mongoose = require("mongoose");
 
+const vehicleImageSchema = new mongoose.Schema(
+  {
+    url: {
+      type: String,
+      required: true,
+    },
+    publicId: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    _id: false,
+  },
+);
+
+const verificationDocumentSchema = new mongoose.Schema(
+  {
+    publicId: {
+      type: String,
+      default: "",
+    },
+    resourceType: {
+      type: String,
+      default: "raw",
+    },
+    type: {
+      type: String,
+      default: "authenticated",
+    },
+    originalName: {
+      type: String,
+      default: "",
+    },
+  },
+  {
+    _id: false,
+  },
+);
+
 const vehicleSchema = new mongoose.Schema(
   {
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
     },
-
+    vehicleNumber: {
+      type: String,
+      required: true,
+      trim: true,
+      uppercase: true,
+    },
     make: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
-
     model: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
-
     year: {
       type: Number,
-      required: true
+      required: true,
     },
-
     vehicleType: {
       type: String,
       required: true,
-      enum: [
-        "hatchback",
-        "sedan",
-        "suv",
-        "muv",
-        "luxury",
-        "sports"
-      ]
+      enum: ["hatchback", "sedan", "suv", "muv", "luxury", "sports"],
     },
-
     fuelType: {
       type: String,
       required: true,
-      enum: [
-        "petrol",
-        "diesel",
-        "cng",
-        "electric",
-        "hybrid"
-      ]
+      enum: ["petrol", "diesel", "cng", "electric", "hybrid"],
     },
-
     transmission: {
       type: String,
       required: true,
-      enum: [
-        "manual",
-        "automatic"
-      ]
+      enum: ["manual", "automatic"],
     },
-
     seatingCapacity: {
       type: Number,
       required: true,
-      min: 1
+      min: 1,
     },
-
     mileage: {
       type: Number,
-      required: true
+      required: true,
     },
-
     rentalPricePerDay: {
       type: Number,
       required: true,
-      min: 0
+      min: 0,
     },
-
     location: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
-
     description: {
       type: String,
-      default: ""
+      default: "",
     },
-
     images: {
-      type: [String],
-      default: []
+      type: [vehicleImageSchema],
+      default: [],
     },
-
     driverAvailable: {
       type: Boolean,
-      default: false
+      default: false,
     },
-
     driverPricePerDay: {
       type: Number,
       default: 0,
-      min: 0
+      min: 0,
     },
-
     features: {
       type: [String],
-      default: []
+      default: [],
     },
-
     availability: [
       {
         startDate: {
           type: Date,
-          required: true
+          required: true,
         },
-
         endDate: {
           type: Date,
-          required: true
-        }
-      }
+          required: true,
+        },
+      },
     ],
-
     verification: {
       status: {
         type: String,
-        enum: [
-          "pending",
-          "verified",
-          "rejected"
-        ],
-        default: "pending"
+        enum: ["pending", "verified", "rejected"],
+        default: "pending",
       },
-
       registrationDocument: {
-        type: String,
-        default: ""
+        type: verificationDocumentSchema,
+        default: () => ({}),
       },
-
       insuranceDocument: {
-        type: String,
-        default: ""
+        type: verificationDocumentSchema,
+        default: () => ({}),
       },
-
       verifiedAt: {
         type: Date,
-        default: null
-      }
+        default: null,
+      },
     },
-
     averageRating: {
       type: Number,
       default: 0,
       min: 0,
-      max: 5
+      max: 5,
     },
-
     totalReviews: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
 vehicleSchema.index({
   owner: 1,
-  createdAt: -1
+  createdAt: -1,
+});
+
+vehicleSchema.index({
+  vehicleNumber: 1,
 });
 
 vehicleSchema.index({
   "verification.status": 1,
-  createdAt: -1
+  createdAt: -1,
 });
 
 vehicleSchema.index({
   vehicleType: 1,
   fuelType: 1,
-  transmission: 1
+  transmission: 1,
 });
 
 vehicleSchema.index({
-  location: 1
+  location: 1,
 });
 
 module.exports = mongoose.model("Vehicle", vehicleSchema);
