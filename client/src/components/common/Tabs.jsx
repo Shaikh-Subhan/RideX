@@ -33,7 +33,7 @@ export const Tabs = ({
               sizeClasses[size] || sizeClasses.md
             } ${
               isActive
-                ? 'bg-rx-surface text-rx-accent border border-rx-border shadow-sm'
+                ? 'bg-rx-surface text-rx-main border border-rx-border shadow-sm'
                 : 'text-rx-muted hover:text-rx-main hover:bg-rx-surface/50 border border-rx-transparent'
             }`}
           >

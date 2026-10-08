@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import {
   Car,
   CalendarCheck,
-  DollarSign,
+  IndianRupee,
   ShieldAlert,
   PlusCircle,
   AlertCircle
@@ -12,6 +12,7 @@ import {
 import OwnerSidebar from '../../components/owner/OwnerSidebar';
 import vehicleApi from '../../api/vehicleApi';
 import bookingApi from '../../api/bookingApi';
+import { formatCurrency } from '../../utils/format';
 import notificationApi from '../../api/notificationApi';
 import Badge from '../../components/common/Badge';
 
@@ -112,7 +113,7 @@ export const OwnerDashboardPage = () => {
 
             <div className="p-5 bg-rx-card rounded-3xl border border-rx-border shadow-xl flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-rx-surface border border-rx-border flex items-center justify-center text-rx-accent shrink-0">
-                <DollarSign className="w-6 h-6" />
+                <IndianRupee className="w-6 h-6" />
               </div>
               <div>
                 <span className="text-[10px] font-bold text-rx-muted uppercase tracking-wider">
@@ -166,7 +167,7 @@ export const OwnerDashboardPage = () => {
                 <h3 className="text-base font-bold text-rx-main">Recent Booking Requests</h3>
                 <Link
                   to="/owner/bookings"
-                  className="text-xs font-bold text-rx-accent hover:text-rx-accent"
+                  className="text-xs font-bold text-rx-main hover:text-rx-main"
                 >
                   View All &rarr;
                 </Link>
@@ -192,7 +193,7 @@ export const OwnerDashboardPage = () => {
                         </p>
                       </div>
                       <div className="text-right">
-                        <span className="font-extrabold text-rx-accent block">${b.totalAmount}</span>
+                        <span className="font-extrabold text-rx-accent block">{formatCurrency(b.totalAmount)}</span>
                         <Badge status={b.status}>{b.status}</Badge>
                       </div>
                     </div>
@@ -207,7 +208,7 @@ export const OwnerDashboardPage = () => {
                 <h3 className="text-base font-bold text-rx-main">Fleet Overview</h3>
                 <Link
                   to="/owner/vehicles"
-                  className="text-xs font-bold text-rx-accent hover:text-rx-accent"
+                  className="text-xs font-bold text-rx-main hover:text-rx-main"
                 >
                   Manage Cars &rarr;
                 </Link>
@@ -240,7 +241,7 @@ export const OwnerDashboardPage = () => {
                           <p className="font-bold text-rx-main">
                             {v.make} {v.model}
                           </p>
-                          <span className="text-[10px] text-rx-accent font-semibold">${v.rentalPricePerDay}/day</span>
+                          <span className="text-[10px] text-rx-accent font-semibold">{formatCurrency(v.rentalPricePerDay)}/day</span>
                         </div>
                       </div>
                       <Badge status={v.verification?.status || 'pending'}>

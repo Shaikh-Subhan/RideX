@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Search,
   MapPin,
@@ -9,20 +9,21 @@ import {
   ArrowRight,
   Car,
   HeartHandshake,
-  Flame
-} from 'lucide-react';
-import vehicleApi from '../../api/vehicleApi';
-import VehicleCard from '../../components/renter/VehicleCard';
-import { VehicleCardSkeleton } from '../../components/common/Skeleton';
-import { useTheme } from '../../context/ThemeContext';
+  Flame,
+} from "lucide-react";
+import vehicleApi from "../../api/vehicleApi";
+import VehicleCard from "../../components/renter/VehicleCard";
+import { VehicleCardSkeleton } from "../../components/common/Skeleton";
+import { useTheme } from "../../context/ThemeContext";
+import { getNextDate } from "../../utils/date";
 
 export const HomePage = () => {
   const navigate = useNavigate();
   const { isDark } = useTheme();
 
-  const [location, setLocation] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [location, setLocation] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const [featuredVehicles, setFeaturedVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,12 +33,15 @@ export const HomePage = () => {
     const fetchVehicles = async () => {
       try {
         setLoading(true);
-        const data = await vehicleApi.getAllVehicles({ limit: 6, sort: 'rating' });
+        const data = await vehicleApi.getAllVehicles({
+          limit: 6,
+          sort: "rating",
+        });
         if (isMounted) {
           setFeaturedVehicles(data.vehicles || []);
         }
       } catch (err) {
-        console.warn('Could not load featured vehicles:', err.message);
+        console.warn("Could not load featured vehicles:", err.message);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -52,59 +56,121 @@ export const HomePage = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const query = new URLSearchParams();
-    if (location.trim()) query.set('location', location.trim());
-    if (startDate) query.set('startDate', startDate);
-    if (endDate) query.set('endDate', endDate);
+    if (location.trim()) query.set("location", location.trim());
+    if (startDate) query.set("startDate", startDate);
+    if (endDate) query.set("endDate", endDate);
     navigate(`/cars?${query.toString()}`);
   };
 
+  const handleStartDateChange = (value) => {
+    setStartDate(value);
+    if (value && endDate && endDate <= value) {
+      setEndDate(getNextDate(value));
+    }
+  };
+
   const categories = [
-    { name: 'SUV', count: 'Luxury Performance & Space', icon: '🚙', query: 'suv' },
-    { name: 'Sedan', count: 'Executive Comfort & Range', icon: '🚗', query: 'sedan' },
-    { name: 'Electric', count: 'Instant Torque & Tech', icon: '⚡', query: 'electric' },
-    { name: 'Luxury', count: 'Exotic & Bespoke Fleet', icon: '✨', query: 'luxury' },
-    { name: 'Hatchback', count: 'Agile Urban Performance', icon: '🚘', query: 'hatchback' },
-    { name: 'Convertible', count: 'Open Air Grand Tourer', icon: '🏎️', query: 'convertible' },
+    {
+      name: "SUV",
+      count: "Luxury Performance & Space",
+      icon: "🚙",
+      query: "suv",
+    },
+    {
+      name: "Sedan",
+      count: "Executive Comfort & Range",
+      icon: "🚗",
+      query: "sedan",
+    },
+    {
+      name: "Electric",
+      count: "Instant Torque & Tech",
+      icon: "⚡",
+      query: "electric",
+    },
+    {
+      name: "Luxury",
+      count: "Exotic & Bespoke Fleet",
+      icon: "✨",
+      query: "luxury",
+    },
+    {
+      name: "Hatchback",
+      count: "Agile Urban Performance",
+      icon: "🚘",
+      query: "hatchback",
+    },
+    {
+      name: "MUV / MPV",
+      count: "Family & Group Travel",
+      icon: "🚐",
+      query: "muv",
+    },
+    {
+      name: "Convertible",
+      count: "Open Air Grand Tourer",
+      icon: "🏎️",
+      query: "convertible",
+    },
   ];
 
   return (
     <div className="space-y-16 lg:space-y-24 pb-20">
       {/* Hero Section */}
-      <section className={`relative overflow-hidden rounded-3xl mx-4 sm:mx-6 lg:mx-8 mt-4 border shadow-2xl transition-colors duration-200 ${
-        isDark
-          ? 'bg-rx-page text-rx-main border-rx-border'
-          : 'bg-rx-surface text-rx-main border-rx-border shadow-rx-soft'
-      }`}>
+      <section
+        className={`relative overflow-hidden rounded-3xl mx-4 sm:mx-6 lg:mx-8 mt-4 border shadow-2xl transition-colors duration-200 ${
+          isDark
+            ? "bg-rx-page text-rx-main border-rx-border"
+            : "bg-rx-surface text-rx-main border-rx-border shadow-rx-soft"
+        }`}
+      >
         <div
           className={`absolute inset-0 z-0 ${
-            isDark ? 'bg-rx-page' : 'bg-rx-surface'
+            isDark ? "bg-rx-page" : "bg-rx-surface"
+          }`}
+        >
+          <img
+            src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2000&q=80"
+            alt="Supercar on Highway"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div
+          className={`absolute inset-0 z-0 transition-colors ${
+            isDark
+              ? "bg-linear-to-r from-rx-page via-rx-page/85 to-rx-transparent"
+              : "bg-linear-to-r from-rx-surface via-rx-surface/95 to-rx-transparent"
           }`}
         />
-        <div className={`absolute inset-0 z-0 transition-colors ${
-          isDark
-            ? 'bg-gradient-to-r from-rx-page via-rx-page/85 to-rx-transparent'
-            : 'bg-gradient-to-r from-rx-surface via-rx-surface/95 to-rx-transparent'
-        }`} />
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 py-16 sm:py-24 lg:py-28 text-center sm:text-left">
-          <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold backdrop-blur-md mb-6 transition-colors ${
-            isDark
-              ? 'bg-rx-card/80 border border-rx-border text-rx-accent'
-              : 'bg-rx-accent-soft border border-rx-accent-border text-rx-accent'
-          }`}>
-            <Flame className={`w-3.5 h-3.5 ${isDark ? 'text-rx-accent' : 'text-rx-accent'}`} />
+          <div
+            className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold backdrop-blur-md mb-6 transition-colors ${
+              isDark
+                ? "bg-rx-card/80 border border-rx-border text-rx-accent"
+                : "bg-rx-accent-soft border border-rx-accent-border text-rx-accent"
+            }`}
+          >
+            <Flame
+              className={`w-3.5 h-3.5 ${isDark ? "text-rx-accent" : "text-rx-accent"}`}
+            />
             <span>High-Performance Peer-to-Peer Car Rental</span>
           </div>
 
-          <h1 className={`text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight max-w-2xl leading-[1.12] transition-colors ${
-            isDark ? 'text-rx-main' : 'text-rx-main'
-          }`}>
+          <h1
+            className={`text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight max-w-2xl leading-[1.12] transition-colors ${
+              isDark ? "text-rx-main" : "text-rx-main"
+            }`}
+          >
             Find the perfect car for your journey
           </h1>
-          <p className={`mt-4 text-sm sm:text-lg max-w-xl font-normal leading-relaxed transition-colors ${
-            isDark ? 'text-rx-muted' : 'text-rx-muted'
-          }`}>
-            Rent cars from trusted owners near you. Compare verified vehicles, self-drive or with a dedicated professional driver.
+          <p
+            className={`mt-4 text-sm sm:text-lg max-w-xl font-normal leading-relaxed transition-colors ${
+              isDark ? "text-rx-muted" : "text-rx-muted"
+            }`}
+          >
+            Rent cars from trusted owners near you. Compare verified vehicles,
+            self-drive or with a dedicated professional driver.
           </p>
 
           {/* Search Panel */}
@@ -112,16 +178,20 @@ export const HomePage = () => {
             onSubmit={handleSearchSubmit}
             className={`mt-10 p-3 sm:p-4 backdrop-blur-md rounded-2xl border shadow-2xl grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 items-center transition-colors ${
               isDark
-                ? 'bg-rx-card/95 border-rx-border'
-                : 'bg-rx-card/95 border-rx-border shadow-rx-soft'
+                ? "bg-rx-card/95 border-rx-border"
+                : "bg-rx-card/95 border-rx-border shadow-rx-soft"
             }`}
           >
             {/* Location */}
             <div className="p-2 sm:p-3 text-left">
-              <label className={`text-[10px] font-extrabold uppercase tracking-wider block mb-1 flex items-center gap-1 ${
-                isDark ? 'text-rx-muted' : 'text-rx-muted'
-              }`}>
-                <MapPin className={`w-3 h-3 ${isDark ? 'text-rx-accent' : 'text-rx-accent'}`} />
+              <label
+                className={`text-[10px] font-extrabold uppercase tracking-wider block mb-1 items-center gap-1 ${
+                  isDark ? "text-rx-muted" : "text-rx-muted"
+                }`}
+              >
+                <MapPin
+                  className={`w-3 h-3 ${isDark ? "text-rx-accent" : "text-rx-accent"}`}
+                />
                 Where
               </label>
               <input
@@ -130,49 +200,63 @@ export const HomePage = () => {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 className={`w-full text-xs sm:text-sm font-semibold focus:outline-none bg-rx-transparent ${
-                  isDark ? 'text-rx-main placeholder-rx-muted' : 'text-rx-main placeholder-rx-muted'
+                  isDark
+                    ? "text-rx-main placeholder-rx-muted"
+                    : "text-rx-main placeholder-rx-muted"
                 }`}
               />
             </div>
 
             {/* Pickup Date */}
-            <div className={`p-2 sm:p-3 text-left border-t sm:border-t-0 sm:border-l ${
-              isDark ? 'border-rx-border' : 'border-rx-border'
-            }`}>
-              <label className={`text-[10px] font-extrabold uppercase tracking-wider block mb-1 flex items-center gap-1 ${
-                isDark ? 'text-rx-muted' : 'text-rx-muted'
-              }`}>
-                <Calendar className={`w-3 h-3 ${isDark ? 'text-rx-accent' : 'text-rx-accent'}`} />
+            <div
+              className={`p-2 sm:p-3 text-left border-t sm:border-t-0 sm:border-l ${
+                isDark ? "border-rx-border" : "border-rx-border"
+              }`}
+            >
+              <label
+                className={`text-[10px] font-extrabold uppercase tracking-wider mb-1 flex items-center gap-1 ${
+                  isDark ? "text-rx-muted" : "text-rx-muted"
+                }`}
+              >
+                <Calendar
+                  className={`w-3 h-3 ${isDark ? "text-rx-accent" : "text-rx-accent"}`}
+                />
                 Pickup Date
               </label>
               <input
                 type="date"
-                min={new Date().toISOString().split('T')[0]}
+                min={new Date().toISOString().split("T")[0]}
                 value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                onChange={(e) => handleStartDateChange(e.target.value)}
                 className={`w-full text-xs sm:text-sm font-semibold focus:outline-none bg-rx-transparent ${
-                  isDark ? 'text-rx-main' : 'text-rx-main'
+                  isDark ? "text-rx-main" : "text-rx-main"
                 }`}
               />
             </div>
 
             {/* Return Date */}
-            <div className={`p-2 sm:p-3 text-left border-t sm:border-t-0 sm:border-l ${
-              isDark ? 'border-rx-border' : 'border-rx-border'
-            }`}>
-              <label className={`text-[10px] font-extrabold uppercase tracking-wider block mb-1 flex items-center gap-1 ${
-                isDark ? 'text-rx-muted' : 'text-rx-muted'
-              }`}>
-                <Calendar className={`w-3 h-3 ${isDark ? 'text-rx-accent' : 'text-rx-accent'}`} />
+            <div
+              className={`p-2 sm:p-3 text-left border-t sm:border-t-0 sm:border-l ${
+                isDark ? "border-rx-border" : "border-rx-border"
+              }`}
+            >
+              <label
+                className={`text-[10px] font-extrabold uppercase tracking-wider mb-1 flex items-center gap-1 ${
+                  isDark ? "text-rx-muted" : "text-rx-muted"
+                }`}
+              >
+                <Calendar
+                  className={`w-3 h-3 ${isDark ? "text-rx-accent" : "text-rx-accent"}`}
+                />
                 Return Date
               </label>
               <input
                 type="date"
-                min={startDate || new Date().toISOString().split('T')[0]}
+                min={startDate ? getNextDate(startDate) : new Date().toISOString().split("T")[0]}
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 className={`w-full text-xs sm:text-sm font-semibold focus:outline-none bg-rx-transparent ${
-                  isDark ? 'text-rx-main' : 'text-rx-main'
+                  isDark ? "text-rx-main" : "text-rx-main"
                 }`}
               />
             </div>
@@ -183,8 +267,8 @@ export const HomePage = () => {
                 type="submit"
                 className={`w-full py-3 sm:py-3.5 px-6 rounded-xl font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
                   isDark
-                    ? 'bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent shadow-lg shadow-rx'
-                    : 'bg-rx-accent hover:bg-rx-accent-hover text-rx-main shadow-lg shadow-rx'
+                    ? "bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent shadow-lg shadow-rx"
+                    : "bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent shadow-lg shadow-rx"
                 }`}
               >
                 <Search className="w-4 h-4" />
@@ -203,12 +287,13 @@ export const HomePage = () => {
               Vehicle Classes
             </h2>
             <p className="text-xs sm:text-sm text-rx-muted mt-1">
-              Select your preferred category engineered for performance and purpose
+              Select your preferred category engineered for performance and
+              purpose
             </p>
           </div>
           <Link
             to="/cars"
-            className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-rx-accent hover:text-rx-accent"
+            className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-rx-main hover:text-rx-main"
           >
             <span>Explore All</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -225,10 +310,12 @@ export const HomePage = () => {
               <span className="text-3xl mb-2 group-hover:scale-110 transition-transform">
                 {cat.icon}
               </span>
-              <h3 className="font-bold text-sm text-rx-main group-hover:text-rx-accent transition-colors">
+              <h3 className="font-bold text-sm text-rx-main group-hover:text-rx-main transition-colors">
                 {cat.name}
               </h3>
-              <p className="text-[10px] text-rx-muted mt-0.5 line-clamp-1">{cat.count}</p>
+              <p className="text-[10px] text-rx-muted mt-0.5 line-clamp-1">
+                {cat.count}
+              </p>
             </Link>
           ))}
         </div>
@@ -252,7 +339,7 @@ export const HomePage = () => {
 
           <Link
             to="/cars"
-            className="flex items-center gap-1.5 text-xs font-bold text-rx-accent hover:text-rx-accent shrink-0"
+            className="flex items-center gap-1.5 text-xs font-bold text-rx-main hover:text-rx-main shrink-0"
           >
             <span>View All ({featuredVehicles.length})</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -274,7 +361,9 @@ export const HomePage = () => {
         ) : (
           <div className="text-center py-12 bg-rx-card rounded-3xl border border-rx-border p-8 shadow-sm">
             <Car className="w-12 h-12 text-rx-muted mx-auto mb-3" />
-            <h3 className="font-bold text-rx-main text-base">No vehicles listed yet</h3>
+            <h3 className="font-bold text-rx-main text-base">
+              No vehicles listed yet
+            </h3>
             <p className="text-xs text-rx-muted max-w-sm mx-auto mt-1 mb-4">
               Be the first car owner to list your vehicle on RideX!
             </p>
@@ -299,7 +388,9 @@ export const HomePage = () => {
               Uncompromising vehicle verification and driver accountability
             </h2>
             <p className="text-xs sm:text-sm text-rx-muted mt-3 leading-relaxed">
-              We separate vehicle ratings from driver reputation. Vehicles earn 1-5 star reviews from drivers, while renters build a 0-100 verified Trust Score.
+              We separate vehicle ratings from driver reputation. Vehicles earn
+              1-5 star reviews from drivers, while renters build a 0-100
+              verified Trust Score.
             </p>
           </div>
 
@@ -308,9 +399,13 @@ export const HomePage = () => {
               <div className="w-10 h-10 rounded-xl bg-rx-accent-soft/50 border border-rx-accent-border/60 text-rx-accent flex items-center justify-center mb-4">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="text-base font-bold text-rx-main mb-1.5">Admin-Verified Fleet</h3>
+              <h3 className="text-base font-bold text-rx-main mb-1.5">
+                Admin-Verified Fleet
+              </h3>
               <p className="text-xs text-rx-muted leading-relaxed">
-                Registration documents and insurance policies are vetted by administrators before any vehicle appears in marketplace listings.
+                Registration documents and insurance policies are vetted by
+                administrators before any vehicle appears in marketplace
+                listings.
               </p>
             </div>
 
@@ -318,9 +413,13 @@ export const HomePage = () => {
               <div className="w-10 h-10 rounded-xl bg-rx-accent-soft/50 border border-rx-accent-border/60 text-rx-accent flex items-center justify-center mb-4">
                 <Award className="w-6 h-6" />
               </div>
-              <h3 className="text-base font-bold text-rx-main mb-1.5">Renter Trust Score (0-100)</h3>
+              <h3 className="text-base font-bold text-rx-main mb-1.5">
+                Renter Trust Score (0-100)
+              </h3>
               <p className="text-xs text-rx-muted leading-relaxed">
-                Car hosts evaluate renters on punctuality and cleanliness after every booking. High trust scores unlock exclusive premium models.
+                Car hosts evaluate renters on punctuality and cleanliness after
+                every booking. High trust scores unlock exclusive premium
+                models.
               </p>
             </div>
 
@@ -328,9 +427,13 @@ export const HomePage = () => {
               <div className="w-10 h-10 rounded-xl bg-rx-card border border-rx-border text-rx-accent flex items-center justify-center mb-4">
                 <HeartHandshake className="w-6 h-6" />
               </div>
-              <h3 className="text-base font-bold text-rx-main mb-1.5">Authentic Star Reviews</h3>
+              <h3 className="text-base font-bold text-rx-main mb-1.5">
+                Authentic Star Reviews
+              </h3>
               <p className="text-xs text-rx-muted leading-relaxed">
-                Vehicle ratings (1–5 stars) come exclusively from verified completed trips, ensuring authentic insights on comfort and performance.
+                Vehicle ratings (1–5 stars) come exclusively from verified
+                completed trips, ensuring authentic insights on comfort and
+                performance.
               </p>
             </div>
           </div>

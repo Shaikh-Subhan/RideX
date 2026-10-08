@@ -4,7 +4,7 @@ import {
   LayoutDashboard,
   Car,
   CalendarCheck,
-  DollarSign,
+  IndianRupee,
   PlusCircle,
   ArrowLeft
 } from 'lucide-react';
@@ -19,7 +19,7 @@ export const OwnerSidebar = () => {
     { label: 'My Vehicles', path: '/owner/vehicles', icon: Car },
     { label: 'Add Vehicle', path: '/owner/vehicles/new', icon: PlusCircle },
     { label: 'Booking Requests', path: '/owner/bookings', icon: CalendarCheck },
-    { label: 'Earnings & Payouts', path: '/owner/earnings', icon: DollarSign },
+    { label: 'Earnings & Payouts', path: '/owner/earnings', icon: IndianRupee },
   ];
   const activeLinkPath = links
     .filter((link) => location.pathname === link.path || (!link.end && location.pathname.startsWith(`${link.path}/`)))
@@ -29,7 +29,7 @@ export const OwnerSidebar = () => {
     <aside className="w-full lg:w-64 bg-rx-card rounded-3xl border border-rx-border shadow-xl p-5 flex flex-col gap-6 shrink-0 h-fit text-rx-main">
       <div>
         <div className="flex items-center gap-2.5 px-2 pb-4 border-b border-rx-border">
-          <div className="w-9 h-9 rounded-xl bg-rx-surface border border-rx-border text-rx-accent flex items-center justify-center font-bold text-xs">
+          <div className="w-9 h-9 rounded-xl bg-rx-surface border border-rx-border text-rx-main flex items-center justify-center font-bold text-xs">
             H
           </div>
           <div>
@@ -51,7 +51,7 @@ export const OwnerSidebar = () => {
                   return (
                   `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                     isActive
-                      ? 'bg-rx-surface text-rx-accent border border-rx-accent/40 shadow-sm'
+                      ? 'bg-rx-surface text-rx-main border border-rx-accent/40 shadow-sm'
                       : 'text-rx-muted hover:text-rx-main hover:bg-rx-surface/60'
                   }`
                   );

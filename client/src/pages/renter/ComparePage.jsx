@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getVehicleImageUrl } from '../../utils/vehicleImage';
+import { formatCurrency } from '../../utils/format';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Scale,
@@ -8,7 +9,7 @@ import {
   CheckCircle2,
   XCircle,
   ArrowRight,
-  DollarSign,
+  IndianRupee,
   Fuel,
   Gauge,
   Users,
@@ -138,8 +139,8 @@ export const ComparePage = () => {
             onClick={clearComparison}
             className={`flex items-center gap-1.5 px-4 py-2 border text-xs font-bold rounded-xl transition-colors cursor-pointer ${
               isDark
-                ? 'border-rx-accent-border/60 bg-rx-accent-soft/30 text-rx-accent hover:bg-rx-accent-soft/60'
-                : 'border-rx-accent-border bg-rx-accent-soft text-rx-accent hover:bg-rx-accent-soft shadow-xs'
+                ? 'border-rx-accent-border/60 bg-rx-accent-soft/30 text-rx-main hover:bg-rx-accent-soft/60'
+                : 'border-rx-accent-border bg-rx-accent-soft text-rx-main hover:bg-rx-accent-soft shadow-xs'
             }`}
           >
             <Trash2 className="w-3.5 h-3.5" />
@@ -152,8 +153,8 @@ export const ComparePage = () => {
         <div
           className={`p-4 rounded-2xl flex items-center justify-between text-xs font-semibold border ${
             isDark
-              ? 'bg-rx-accent-soft/30 border-rx-accent-border/50 text-rx-accent'
-              : 'bg-rx-accent-soft border-rx-accent-border text-rx-accent shadow-xs'
+              ? 'bg-rx-accent-soft/30 border-rx-accent-border/50 text-rx-main'
+              : 'bg-rx-accent-soft border-rx-accent-border text-rx-main shadow-xs'
           }`}
         >
           <span>Select at least 2 vehicles to unlock full comparison and difference highlighting.</span>
@@ -203,8 +204,8 @@ export const ComparePage = () => {
                         onClick={() => removeVehicle(v._id)}
                         className={`absolute top-2 right-2 p-1.5 rounded-lg transition-colors cursor-pointer ${
                           isDark
-                            ? 'bg-rx-page/80 text-rx-muted hover:text-rx-accent hover:bg-rx-card'
-                            : 'bg-rx-card/95 text-rx-main hover:text-rx-accent hover:bg-rx-accent-soft border border-rx-border shadow-sm'
+                            ? 'bg-rx-page/80 text-rx-muted hover:text-rx-main hover:bg-rx-card'
+                            : 'bg-rx-card/95 text-rx-main hover:text-rx-main hover:bg-rx-accent-soft border border-rx-border shadow-sm'
                         }`}
                         title="Remove from comparison"
                       >
@@ -248,7 +249,7 @@ export const ComparePage = () => {
                         className={`w-full flex items-center justify-center gap-1.5 py-2.5 px-3 text-xs font-black rounded-xl transition-all shadow-md ${
                           isDark
                             ? 'bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent shadow-rx'
-                            : 'bg-rx-accent hover:bg-rx-accent-hover text-rx-main shadow-rx'
+                            : 'bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent shadow-rx'
                         }`}
                       >
                         <span>Rent This Car</span>
@@ -281,7 +282,7 @@ export const ComparePage = () => {
                   isDark ? 'text-rx-muted' : 'text-rx-main'
                 }`}
               >
-                <DollarSign className={`w-4 h-4 ${isDark ? 'text-rx-accent' : 'text-rx-accent'}`} />
+                <IndianRupee className={`w-4 h-4 ${isDark ? 'text-rx-accent' : 'text-rx-accent'}`} />
                 Daily Price
               </td>
               {comparedData.map((v) => (
@@ -291,7 +292,7 @@ export const ComparePage = () => {
                       isDark ? 'text-rx-accent' : 'text-rx-accent'
                     }`}
                   >
-                    ${v.rentalPricePerDay}
+                    {formatCurrency(v.rentalPricePerDay)}
                   </span>
                   <span
                     className={`text-[10px] font-semibold ${
@@ -474,7 +475,7 @@ export const ComparePage = () => {
                     isDark ? 'text-rx-main' : 'text-rx-main'
                   }`}
                 >
-                  {v.mileage || 'Standard'} mpg
+                  {v.mileage || 'Standard'} km/l
                 </td>
               ))}
             </tr>
@@ -505,7 +506,7 @@ export const ComparePage = () => {
                       }`}
                     >
                       <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                      Available (+${v.driverPricePerDay}/day)
+                      Available (+{formatCurrency(v.driverPricePerDay)}/day)
                     </span>
                   ) : (
                     <span

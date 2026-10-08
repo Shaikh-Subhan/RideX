@@ -77,8 +77,8 @@ export const CompareDrawer = () => {
                 onClick={() => removeVehicle(vehicle._id)}
                 className={`p-1 rounded-md transition-colors cursor-pointer ${
                   isDark
-                    ? 'text-rx-muted hover:text-rx-accent hover:bg-rx-card'
-                    : 'text-rx-muted hover:text-rx-accent hover:bg-rx-accent-soft'
+                    ? 'text-rx-muted hover:text-rx-main hover:bg-rx-card'
+                    : 'text-rx-muted hover:text-rx-main hover:bg-rx-accent-soft'
                 }`}
                 title="Remove"
                 aria-label="Remove vehicle from comparison"
@@ -111,7 +111,7 @@ export const CompareDrawer = () => {
               count >= 2
                 ? isDark
                   ? 'bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent cursor-pointer shadow-rx'
-                  : 'bg-rx-accent hover:bg-rx-accent-hover text-rx-main cursor-pointer shadow-rx'
+                  : 'bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent cursor-pointer shadow-rx'
                 : isDark
                 ? 'bg-rx-surface text-rx-main border border-rx-border cursor-not-allowed pointer-events-none'
                 : 'bg-rx-surface text-rx-muted border border-rx-border cursor-not-allowed pointer-events-none'

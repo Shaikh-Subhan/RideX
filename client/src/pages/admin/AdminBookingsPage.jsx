@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { CalendarCheck, ChevronLeft, ChevronRight, Calendar, User, DollarSign } from 'lucide-react';
+import { CalendarCheck, ChevronLeft, ChevronRight, Calendar, User } from 'lucide-react';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import adminApi from '../../api/adminApi';
 import Badge from '../../components/common/Badge';
 import CustomSelect from '../../components/common/CustomSelect';
 import { TableRowSkeleton } from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
+import { formatCurrency, formatDate } from '../../utils/format';
 
 export const AdminBookingsPage = () => {
   const [bookings, setBookings] = useState([]);
@@ -138,15 +139,15 @@ export const AdminBookingsPage = () => {
                         </td>
 
                         <td className="py-4 px-4 text-rx-muted font-medium">
-                          {new Date(b.startDate).toLocaleDateString()} &rarr;{' '}
-                          {new Date(b.endDate).toLocaleDateString()}
+                          {formatDate(b.startDate)} &rarr;{' '}
+                          {formatDate(b.endDate)}
                           <span className="text-[10px] text-rx-muted block">
                             {b.rentalDays} days {b.withDriver ? '(With Driver)' : ''}
                           </span>
                         </td>
 
                         <td className="py-4 px-4 font-extrabold text-rx-main text-sm">
-                          ${b.totalAmount}
+                          {formatCurrency(b.totalAmount)}
                         </td>
 
                         <td className="py-4 px-5 text-right space-x-1.5">

@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from "react";
 import {useParams, useNavigate, Link} from "react-router-dom";
 import {
   Car,
-  DollarSign,
+  IndianRupee,
   Image as ImageIcon,
   CheckCircle2,
   AlertCircle,
@@ -42,28 +42,28 @@ export const AddEditVehiclePage = () => {
     transmission: "automatic",
     seatingCapacity: 5,
     mileage: 28,
-    rentalPricePerDay: 65,
+    rentalPricePerDay: 2500,
     location: "",
     description: "",
     images: [],
     driverAvailable: false,
-    driverPricePerDay: 30,
-    features: ["Air Conditioning", "Bluetooth Audio", "Backup Camera"],
+    driverPricePerDay: 1200,
+    features: ["Air Conditioning", "Bluetooth Audio", "Reverse Parking Camera"],
   });
 
   const availableFeatures = [
     "Air Conditioning",
     "Bluetooth Audio",
-    "Backup Camera",
+    "Reverse Parking Camera",
     "GPS Navigation",
     "Apple CarPlay / Android Auto",
     "Leather Seats",
     "Sunroof / Moonroof",
-    "Heated Seats",
+    "Rear AC Vents",
     "Keyless Entry",
-    "Cruise Control",
-    "Blind Spot Monitor",
-    "All-Wheel Drive (AWD)",
+    "360° Camera",
+    "Hill Hold Assist",
+    "Cooled Seats",
   ];
 
   useEffect(() => {
@@ -88,8 +88,8 @@ export const AddEditVehiclePage = () => {
             fuelType: v.fuelType || "petrol",
             transmission: v.transmission || "automatic",
             seatingCapacity: v.seatingCapacity || 5,
-            mileage: v.mileage || 28,
-            rentalPricePerDay: v.rentalPricePerDay || 65,
+            mileage: v.mileage || 18,
+            rentalPricePerDay: v.rentalPricePerDay || 2500,
             location: v.location || "",
             description: v.description || "",
             images:
@@ -360,7 +360,7 @@ export const AddEditVehiclePage = () => {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. CA-89-XYZ4 or MH-02-AB-1234"
+                    placeholder="e.g. MH-02-AB-1234 or DL-8C-AB-1234"
                     value={formData.vehicleNumber}
                     onChange={(e) =>
                       handleChange(
@@ -386,7 +386,7 @@ export const AddEditVehiclePage = () => {
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Porsche, BMW, Tesla"
+                      placeholder="e.g. Maruti Suzuki, Tata, Mahindra"
                       value={formData.make}
                       onChange={(e) => handleChange("make", e.target.value)}
                       className="w-full px-3 py-2 bg-rx-surface border border-rx-border rounded-xl text-xs font-semibold text-rx-main placeholder-rx-muted focus:outline-none focus:border-rx-accent"
@@ -401,7 +401,7 @@ export const AddEditVehiclePage = () => {
                     <input
                       type="text"
                       required
-                      placeholder="e.g. 911 GT3, M4, Model S"
+                      placeholder="e.g. Swift, Nexon, XUV700"
                       value={formData.model}
                       onChange={(e) => handleChange("model", e.target.value)}
                       className="w-full px-3 py-2 bg-rx-surface border border-rx-border rounded-xl text-xs font-semibold text-rx-main placeholder-rx-muted focus:outline-none focus:border-rx-accent"
@@ -447,6 +447,11 @@ export const AddEditVehiclePage = () => {
                           value: "hatchback",
                           label: "Hatchback",
                           icon: "🚗",
+                        },
+                        {
+                          value: "muv",
+                          label: "MUV / MPV",
+                          icon: "🚐",
                         },
                         {
                           value: "luxury",
@@ -557,14 +562,14 @@ export const AddEditVehiclePage = () => {
 
               <div className="bg-rx-card rounded-3xl border border-rx-border p-6 sm:p-7 shadow-xl space-y-4">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-rx-muted flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-rx-accent" />
+                  <IndianRupee className="w-4 h-4 text-rx-accent" />
                   Pricing & Availability
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-rx-muted">
-                      Rental Price Per Day ($) *
+                      Rental Price Per Day (₹) *
                     </label>
 
                     <input
@@ -587,7 +592,7 @@ export const AddEditVehiclePage = () => {
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Downtown or Airport"
+                      placeholder="e.g. Bengaluru, Mumbai or Delhi"
                       value={formData.location}
                       onChange={(e) => handleChange("location", e.target.value)}
                       className="w-full px-3 py-2 bg-rx-surface border border-rx-border rounded-xl text-xs text-rx-main placeholder-rx-muted focus:outline-none focus:border-rx-accent"
@@ -624,7 +629,7 @@ export const AddEditVehiclePage = () => {
                   {formData.driverAvailable && (
                     <div className="w-48 space-y-1">
                       <label className="text-[10px] font-bold text-rx-muted uppercase">
-                        Driver Rate ($/day)
+                        Driver Rate (₹/day)
                       </label>
 
                       <input
@@ -719,7 +724,7 @@ export const AddEditVehiclePage = () => {
                             <button
                               type="button"
                               onClick={() => handleRemoveImage(idx)}
-                              className="absolute top-1.5 right-1.5 p-1 rounded-md bg-rx-page/80 text-rx-muted hover:text-rx-accent hover:bg-rx-accent-soft/80 transition-colors opacity-80 group-hover:opacity-100 cursor-pointer"
+                              className="absolute top-1.5 right-1.5 p-1 rounded-md bg-rx-page/80 text-rx-muted hover:text-rx-main hover:bg-rx-accent-soft/80 transition-colors opacity-80 group-hover:opacity-100 cursor-pointer"
                               title="Remove photo">
                               <X className="w-3.5 h-3.5" />
                             </button>
@@ -731,7 +736,7 @@ export const AddEditVehiclePage = () => {
                         <button
                           type="button"
                           onClick={() => fileInputRef.current?.click()}
-                          className="aspect-16/10 rounded-xl border border-dashed border-rx-border hover:border-rx-accent bg-rx-surface/40 hover:bg-rx-surface flex flex-col items-center justify-center gap-1 text-rx-muted hover:text-rx-accent transition-all cursor-pointer">
+                          className="aspect-16/10 rounded-xl border border-dashed border-rx-border hover:border-rx-accent bg-rx-surface/40 hover:bg-rx-surface flex flex-col items-center justify-center gap-1 text-rx-muted hover:text-rx-main transition-all cursor-pointer">
                           <Plus className="w-4 h-4" />
                           <span className="text-[10px] font-bold">
                             Add Photo
@@ -776,7 +781,7 @@ export const AddEditVehiclePage = () => {
                         onClick={() => toggleFeature(feat)}
                         className={`p-2.5 rounded-xl border text-xs font-semibold text-left transition-all cursor-pointer flex items-center gap-2 ${
                           isSelected ?
-                            "bg-rx-accent-soft/40 border-rx-accent text-rx-accent shadow-sm"
+                            "bg-rx-accent-soft/40 border-rx-accent text-rx-main shadow-sm"
                           : "bg-rx-surface border-rx-border text-rx-muted hover:border-rx-border-strong"
                         }`}>
                         <CheckCircle2

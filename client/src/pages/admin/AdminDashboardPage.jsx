@@ -9,11 +9,11 @@ import {
   ShieldCheck,
   TrendingUp,
   AlertTriangle,
-  ArrowRight,
-  DollarSign
+  ArrowRight
 } from 'lucide-react';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import adminApi from '../../api/adminApi';
+import { formatCurrency } from '../../utils/format';
 
 export const AdminDashboardPage = () => {
   const [stats, setStats] = useState(null);
@@ -78,7 +78,7 @@ export const AdminDashboardPage = () => {
               </div>
               <Link
                 to="/admin/verification"
-                className="px-4 py-2 bg-rx-accent hover:bg-rx-accent-soft text-rx-main text-xs font-bold rounded-xl transition-colors shrink-0 shadow-md"
+                className="px-4 py-2 bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent text-xs font-bold rounded-xl transition-colors shrink-0 shadow-md"
               >
                 Review Now
               </Link>
@@ -92,7 +92,7 @@ export const AdminDashboardPage = () => {
                 Total Collected Revenue
               </span>
               <p className="text-3xl sm:text-4xl font-extrabold text-rx-accent">
-                ${payments.totalCollectedAmount || 0}
+                {formatCurrency(payments.totalCollectedAmount || 0)}
               </p>
               <p className="text-xs text-rx-muted pt-1">
                 From {payments.paid || 0} fully paid and {payments.partiallyPaid || 0} partial transactions
@@ -104,7 +104,7 @@ export const AdminDashboardPage = () => {
                 Total Refunded Volume
               </span>
               <p className="text-3xl sm:text-4xl font-extrabold text-rx-main">
-                ${payments.totalRefundedAmount || 0}
+                {formatCurrency(payments.totalRefundedAmount || 0)}
               </p>
               <p className="text-xs text-rx-muted pt-1">
                 From {payments.refunded || 0} processed refund requests

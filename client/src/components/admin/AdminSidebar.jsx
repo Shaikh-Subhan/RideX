@@ -28,7 +28,7 @@ export const AdminSidebar = () => {
     <aside className="w-full lg:w-64 bg-rx-card text-rx-main rounded-3xl border border-rx-border p-5 flex flex-col gap-6 shrink-0 h-fit shadow-xl">
       <div>
         <div className="flex items-center gap-2.5 px-2 pb-4 border-b border-rx-border">
-          <div className="w-9 h-9 rounded-xl bg-rx-surface border border-rx-border text-rx-accent flex items-center justify-center font-bold text-sm shadow-md">
+          <div className="w-9 h-9 rounded-xl bg-rx-surface border border-rx-border text-rx-main flex items-center justify-center font-bold text-sm shadow-md">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
@@ -48,7 +48,7 @@ export const AdminSidebar = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                     isActive
-                      ? 'bg-rx-surface text-rx-accent border border-rx-accent/40 shadow-sm'
+                      ? 'bg-rx-surface text-rx-main border border-rx-accent/40 shadow-sm'
                       : 'text-rx-muted hover:text-rx-main hover:bg-rx-surface/60'
                   }`
                 }
@@ -65,7 +65,7 @@ export const AdminSidebar = () => {
         <button
           type="button"
           onClick={() => switchRole('renter')}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-rx-muted hover:text-rx-main bg-rx-surface hover:bg-rx-border rounded-xl transition-colors cursor-pointer border border-rx-border"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-rx-main bg-rx-surface hover:bg-rx-border rounded-xl transition-colors cursor-pointer border border-rx-border"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Exit Admin Console

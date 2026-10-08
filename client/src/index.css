@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-rx-page: #0b0d0e;
-  --color-rx-card: #191b1d;
-  --color-rx-surface: #191b1d;
-  --color-rx-border: #313030;
-  --color-rx-border-strong: #2b2d2e;
-  --color-rx-accent: #f05211;
-  --color-rx-accent-hover: #8b310d;
-  --color-rx-accent-dark: #8b310d;
-  --color-rx-accent-soft: #8b310d;
+  --color-rx-page: #142336;
+  --color-rx-card: #1b2d40;
+  --color-rx-surface: #22374b;
+  --color-rx-border: #2f4156;
+  --color-rx-border-strong: #567c8d;
+  --color-rx-accent: #567c8d;
+  --color-rx-accent-hover: #6b91a2;
+  --color-rx-accent-dark: #2f4156;
+  --color-rx-accent-soft: #263c50;
   --color-rx-transparent: transparent;
-  --color-rx-accent-border: #8b310d;
-  --color-rx-main: #f8f8f8;
-  --color-rx-on-accent: #020303;
-  --color-rx-muted: #8f8f90;
+  --color-rx-accent-border: #567c8d;
+  --color-rx-main: #f5efeb;
+  --color-rx-on-accent: #000000;
+  --color-rx-muted: #c8d9e6;
 }
 
 @layer base {
@@ -23,8 +23,8 @@
   }
 
   body {
-    background-color: #0b0d0e;
-    color: #f8f8f8;
+    background-color: #142336;
+    color: #f5efeb;
     font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     transition: background-color 0.2s ease, color 0.2s ease;
   }
@@ -32,12 +32,22 @@
   input,
   select,
   textarea {
-    color: #f8f8f8;
+    color: #f5efeb;
+  }
+
+  input[type="date"] {
+    color-scheme: dark;
+    accent-color: #567c8d;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.8;
   }
 
   input::placeholder,
   textarea::placeholder {
-    color: #8f8f90;
+    color: #c8d9e6;
   }
 }
 
@@ -47,42 +57,42 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0d0e;
+  background: #142336;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #313030;
+  background: #2f4156;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #f05211;
+  background: #567c8d;
 }
 
 [data-theme="light"],
 html.light {
   color-scheme: light;
 
-  --color-rx-page: #faf9f9;
+  --color-rx-page: #f5efeb;
   --color-rx-card: #ffffff;
-  --color-rx-surface: #f1f0ef;
-  --color-rx-border: #dfdddb;
-  --color-rx-border-strong: #2b2c2e;
-  --color-rx-accent: #f15213;
-  --color-rx-accent-hover: #8b310d;
-  --color-rx-accent-dark: #8b310d;
-  --color-rx-accent-soft: #f1f0ef;
+  --color-rx-surface: #c8d9e6;
+  --color-rx-border: #d7e1e7;
+  --color-rx-border-strong: #2f4156;
+  --color-rx-accent: #2f4156;
+  --color-rx-accent-hover: #24384e;
+  --color-rx-accent-dark: #24384e;
+  --color-rx-accent-soft: #e3edf2;
   --color-rx-transparent: transparent;
-  --color-rx-accent-border: #dfdddb;
-  --color-rx-main: #2b2c2e;
-  --color-rx-on-accent: #2b2c2e;
-  --color-rx-muted: #676868;
+  --color-rx-accent-border: #c8d9e6;
+  --color-rx-main: #2f4156;
+  --color-rx-on-accent: #ffffff;
+  --color-rx-muted: #405666;
 }
 
 [data-theme="light"] body,
 html.light body {
-  background-color: #faf9f9;
-  color: #2b2c2e;
+  background-color: #f5efeb;
+  color: #2f4156;
 }
 
 [data-theme="light"] input,
@@ -91,42 +101,53 @@ html.light body {
 html.light input,
 html.light select,
 html.light textarea {
-  color: #2b2c2e;
+  color: #2f4156;
+}
+
+[data-theme="light"] input[type="date"],
+html.light input[type="date"] {
+  color-scheme: light;
+  accent-color: #2f4156;
+}
+
+[data-theme="light"] input[type="date"]::-webkit-calendar-picker-indicator,
+html.light input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0.8;
 }
 
 [data-theme="light"] input::placeholder,
 [data-theme="light"] textarea::placeholder,
 html.light input::placeholder,
 html.light textarea::placeholder {
-  color: #676868;
+  color: #405666;
 }
 
 [data-theme="light"] header,
 html.light header {
   background-color: rgba(255, 255, 255, 0.95);
-  border-bottom-color: #dfdddb;
+  border-bottom-color: #d7e1e7;
 }
 
 [data-theme="light"] footer,
 html.light footer {
-  background-color: #faf9f9;
-  border-top-color: #dfdddb;
-  color: #676868;
+  background-color: #f5efeb;
+  border-top-color: #d7e1e7;
+  color: #526675;
 }
 
 [data-theme="light"] ::-webkit-scrollbar-track,
 html.light ::-webkit-scrollbar-track {
-  background: #faf9f9;
+  background: #f5efeb;
 }
 
 [data-theme="light"] ::-webkit-scrollbar-thumb,
 html.light ::-webkit-scrollbar-thumb {
-  background: #dfdddb;
+  background: #d7e1e7;
 }
 
 [data-theme="light"] ::-webkit-scrollbar-thumb:hover,
 html.light ::-webkit-scrollbar-thumb:hover {
-  background: #f15213;
+  background: #2f4156;
 }
 
 @layer utilities {

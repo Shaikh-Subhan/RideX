@@ -21,6 +21,7 @@ import { TableRowSkeleton } from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
 import { ConfirmDialog } from '../../components/common/Modal';
 import { useToast } from '../../context/ToastContext';
+import { formatCurrency } from '../../utils/format';
 
 export const AdminVehiclesPage = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -209,7 +210,7 @@ export const AdminVehiclesPage = () => {
                           </td>
 
                           <td className="py-4 px-4 font-bold text-rx-accent">
-                            ${v.rentalPricePerDay}/day
+                            {formatCurrency(v.rentalPricePerDay)}/day
                           </td>
 
                           <td className="py-4 px-4 text-rx-muted font-medium">
@@ -234,7 +235,7 @@ export const AdminVehiclesPage = () => {
                                         message: `Approve verification for ${v.make} ${v.model}? This vehicle will immediately go live on the public marketplace.`,
                                       })
                                     }
-                                    className="p-1.5 bg-rx-accent-soft/60 hover:bg-rx-accent-dark/80 text-rx-accent border border-rx-accent-border/60 rounded-lg transition-colors cursor-pointer"
+                                    className="p-1.5 bg-rx-accent-soft/60 hover:bg-rx-accent-dark/80 text-rx-main border border-rx-accent-border/60 rounded-lg transition-colors cursor-pointer"
                                     title="Approve & Verify"
                                   >
                                     <Check className="w-4 h-4" />
@@ -250,7 +251,7 @@ export const AdminVehiclesPage = () => {
                                         message: `Decline verification for ${v.make} ${v.model}?`,
                                       })
                                     }
-                                    className="p-1.5 bg-rx-accent-soft/60 hover:bg-rx-accent-dark/80 text-rx-accent border border-rx-accent-border/60 rounded-lg transition-colors cursor-pointer"
+                                    className="p-1.5 bg-rx-accent-soft/60 hover:bg-rx-accent-dark/80 text-rx-main border border-rx-accent-border/60 rounded-lg transition-colors cursor-pointer"
                                     title="Reject Documents"
                                   >
                                     <X className="w-4 h-4" />
@@ -258,7 +259,7 @@ export const AdminVehiclesPage = () => {
 
                                   <Link
                                     to="/admin/verification"
-                                    className="p-1.5 text-rx-accent hover:bg-rx-surface rounded-lg border border-rx-border"
+                                    className="p-1.5 text-rx-main hover:bg-rx-surface rounded-lg border border-rx-border"
                                     title="Inspect Submitted Documents"
                                   >
                                     <FileCheck className="w-4 h-4" />

@@ -99,7 +99,7 @@ export const VehicleAvailabilityModal = ({ isOpen, onClose, vehicle, onSuccess }
                   <button
                     type="button"
                     onClick={() => handleRemoveRange(idx)}
-                    className="p-1 text-rx-muted hover:text-rx-accent rounded-lg transition-colors cursor-pointer"
+                    className="p-1 text-rx-muted hover:text-rx-main rounded-lg transition-colors cursor-pointer"
                     title="Remove window"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -138,7 +138,7 @@ export const VehicleAvailabilityModal = ({ isOpen, onClose, vehicle, onSuccess }
           <button
             type="button"
             onClick={handleAddRange}
-            className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-rx-card hover:bg-rx-border border border-rx-border text-rx-accent text-xs font-bold rounded-xl transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-rx-card hover:bg-rx-border border border-rx-border text-rx-main text-xs font-bold rounded-xl transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Add Window

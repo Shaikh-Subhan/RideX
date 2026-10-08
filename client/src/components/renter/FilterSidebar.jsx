@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import CustomSelect from '../common/CustomSelect';
+import { getNextDate } from '../../utils/date';
 
 export const FilterSidebar = ({
   filters,
@@ -30,16 +31,14 @@ export const FilterSidebar = ({
     { value: 'sedan', label: 'Sedan', icon: '🚘', subtext: 'Executive Comfort' },
     { value: 'suv', label: 'SUV', icon: '🚙', subtext: 'Performance & Space' },
     { value: 'hatchback', label: 'Hatchback', icon: '🚗', subtext: 'Agile Urban' },
+    { value: 'muv', label: 'MUV / MPV', icon: '🚐', subtext: 'Family & Group Travel' },
     { value: 'luxury', label: 'Luxury & Exotic', icon: '✨', subtext: 'Bespoke Premium' },
-    { value: 'truck', label: 'Truck / Pickup', icon: '🛻', subtext: 'High Utility' },
-    { value: 'van', label: 'Van / Minivan', icon: '🚐', subtext: 'Passenger Group' },
-    { value: 'convertible', label: 'Convertible', icon: '🏎️', subtext: 'Open Air Tourer' },
-    { value: 'coupe', label: 'Coupe', icon: '🏁', subtext: 'Sport Dynamics' },
+    { value: 'sports', label: 'Sports', icon: '🏎️', subtext: 'Performance Cars' },
   ];
 
   const fuelTypeOptions = [
     { value: 'all', label: 'All Powertrains', icon: '⚡' },
-    { value: 'petrol', label: 'Petrol / Gasoline', icon: '⛽' },
+    { value: 'petrol', label: 'Petrol', icon: '⛽' },
     { value: 'diesel', label: 'Diesel', icon: '🛢️' },
     { value: 'electric', label: '100% Electric (EV)', icon: '⚡', badge: 'EV' },
     { value: 'hybrid', label: 'Hybrid / Plug-In', icon: '🔋', badge: 'Hybrid' },
@@ -61,7 +60,11 @@ export const FilterSidebar = ({
   const transmissions = ['all', 'automatic', 'manual'];
 
   const handleChange = (field, value) => {
-    onChange({ ...filters, [field]: value, page: 1 });
+    const updatedFilters = { ...filters, [field]: value, page: 1 };
+    if (field === 'startDate' && value && filters.endDate && filters.endDate <= value) {
+      updatedFilters.endDate = getNextDate(value);
+    }
+    onChange(updatedFilters);
   };
 
   const inputClass = `w-full py-2 px-3 rounded-xl text-xs font-medium border transition-all duration-150 focus:outline-none ${
@@ -118,8 +121,8 @@ export const FilterSidebar = ({
           onClick={onReset}
           className={`flex items-center gap-1 text-xs font-semibold cursor-pointer transition-colors ${
             isDark
-              ? 'text-rx-accent hover:text-rx-accent'
-              : 'text-rx-accent hover:text-rx-accent'
+              ? 'text-rx-main hover:text-rx-main'
+              : 'text-rx-main hover:text-rx-main'
           }`}
         >
           <RotateCcw className="w-3.5 h-3.5" />
@@ -199,7 +202,7 @@ export const FilterSidebar = ({
             <input
               type="date"
               value={filters.endDate || ''}
-              min={filters.startDate || new Date().toISOString().split('T')[0]}
+              min={filters.startDate ? getNextDate(filters.startDate) : new Date().toISOString().split('T')[0]}
               onChange={(e) => handleChange('endDate', e.target.value)}
               className={inputClass}
             />
@@ -209,11 +212,11 @@ export const FilterSidebar = ({
 
       {/* Price Range */}
       <div className="space-y-1.5">
-        <label className={labelClass}>Daily Price ($)</label>
+        <label className={labelClass}>Daily Price (₹)</label>
         <div className="grid grid-cols-2 gap-2">
           <input
             type="number"
-            placeholder="Min ($)"
+            placeholder="Min (₹)"
             value={filters.minPrice || ''}
             min="0"
             onChange={(e) => handleChange('minPrice', e.target.value)}
@@ -221,7 +224,7 @@ export const FilterSidebar = ({
           />
           <input
             type="number"
-            placeholder="Max ($)"
+            placeholder="Max (₹)"
             value={filters.maxPrice || ''}
             min="0"
             onChange={(e) => handleChange('maxPrice', e.target.value)}
@@ -259,7 +262,7 @@ export const FilterSidebar = ({
                   isSelected
                     ? isDark
                       ? 'bg-rx-accent text-rx-on-accent border-rx-accent shadow-sm'
-                      : 'bg-rx-accent text-rx-main border-rx-accent shadow-sm'
+                      : 'bg-rx-accent text-rx-on-accent border-rx-accent shadow-sm'
                     : isDark
                     ? 'bg-rx-surface text-rx-muted border-rx-border hover:text-rx-main hover:border-rx-border-strong'
                     : 'bg-rx-card text-rx-muted border-rx-border hover:text-rx-main hover:border-rx-border shadow-xs'
@@ -306,7 +309,7 @@ export const FilterSidebar = ({
                   isSelected
                     ? isDark
                       ? 'bg-rx-accent text-rx-on-accent border-rx-accent shadow-sm'
-                      : 'bg-rx-accent text-rx-main border-rx-accent shadow-sm'
+                      : 'bg-rx-accent text-rx-on-accent border-rx-accent shadow-sm'
                     : isDark
                     ? 'bg-rx-surface text-rx-muted border-rx-border hover:text-rx-main hover:border-rx-border-strong'
                     : 'bg-rx-card text-rx-muted border-rx-border hover:text-rx-main hover:border-rx-border shadow-xs'
@@ -354,7 +357,7 @@ export const FilterSidebar = ({
           className={`w-full py-3 rounded-xl font-bold text-xs shadow-md transition-colors cursor-pointer ${
             isDark
               ? 'bg-rx-accent text-rx-on-accent hover:bg-rx-accent-hover'
-              : 'bg-rx-accent text-rx-main hover:bg-rx-accent-hover'
+              : 'bg-rx-accent text-rx-on-accent hover:bg-rx-accent-hover'
           }`}
         >
           Show Results

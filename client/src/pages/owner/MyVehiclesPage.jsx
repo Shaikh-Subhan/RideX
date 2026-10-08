@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import OwnerSidebar from '../../components/owner/OwnerSidebar';
 import vehicleApi from '../../api/vehicleApi';
+import { formatCurrency } from '../../utils/format';
 import Badge from '../../components/common/Badge';
 import RatingStars from '../../components/common/RatingStars';
 import VehicleAvailabilityModal from '../../components/owner/VehicleAvailabilityModal';
@@ -146,7 +147,7 @@ export const MyVehiclesPage = () => {
 
                           <td className="py-4 px-4">
                             <span className="font-bold text-rx-accent text-sm">
-                              ${v.rentalPricePerDay}
+                              {formatCurrency(v.rentalPricePerDay)}
                             </span>
                             <span className="text-rx-muted text-[10px]">/day</span>
                           </td>
@@ -170,7 +171,7 @@ export const MyVehiclesPage = () => {
                                 <button
                                   type="button"
                                   onClick={() => setSelectedVehicleForVerif(v)}
-                                  className="p-1.5 text-rx-accent hover:bg-rx-surface rounded-lg transition-colors cursor-pointer"
+                                  className="p-1.5 text-rx-main hover:bg-rx-surface rounded-lg transition-colors cursor-pointer"
                                   title="Submit verification docs"
                                 >
                                   <FileCheck className="w-4 h-4" />
@@ -209,7 +210,7 @@ export const MyVehiclesPage = () => {
                               <button
                                 type="button"
                                 onClick={() => setDeletingVehicleId(v._id)}
-                                className="p-1.5 text-rx-accent hover:bg-rx-accent-soft/20 rounded-lg transition-colors cursor-pointer"
+                                className="p-1.5 text-rx-main hover:bg-rx-accent-soft/20 rounded-lg transition-colors cursor-pointer"
                                 title="Delete vehicle"
                               >
                                 <Trash2 className="w-4 h-4" />

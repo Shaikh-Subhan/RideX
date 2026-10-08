@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  DollarSign,
+  IndianRupee,
   TrendingUp,
   CalendarCheck,
   CreditCard,
@@ -12,6 +12,7 @@ import {
 import OwnerSidebar from '../../components/owner/OwnerSidebar';
 import bookingApi from '../../api/bookingApi';
 import Badge from '../../components/common/Badge';
+import { formatCurrency, formatDate } from '../../utils/format';
 
 export const OwnerEarningsPage = () => {
   const [earnings, setEarnings] = useState({
@@ -69,7 +70,7 @@ export const OwnerEarningsPage = () => {
               <span className="text-[11px] font-bold uppercase tracking-wider text-rx-accent">
                 Total Revenue
               </span>
-              <p className="text-3xl sm:text-4xl font-extrabold text-rx-main">${total}</p>
+              <p className="text-3xl sm:text-4xl font-extrabold text-rx-main">{formatCurrency(total)}</p>
               <div className="flex items-center gap-1.5 text-xs text-rx-accent pt-2">
                 <TrendingUp className="w-4 h-4 text-rx-accent" />
                 <span>Earned across all completed rentals</span>
@@ -92,10 +93,10 @@ export const OwnerEarningsPage = () => {
                 Average Payout / Trip
               </span>
               <p className="text-3xl sm:text-4xl font-extrabold text-rx-accent">
-                ${completed > 0 ? (total / completed).toFixed(0) : '0'}
+                {formatCurrency(completed > 0 ? (total / completed).toFixed(0) : 0)}
               </p>
               <div className="flex items-center gap-1.5 text-xs text-rx-muted pt-2">
-                <DollarSign className="w-4 h-4 text-rx-accent" />
+                <IndianRupee className="w-4 h-4 text-rx-accent" />
                 <span>Per completed rental</span>
               </div>
             </div>
@@ -110,13 +111,13 @@ export const OwnerEarningsPage = () => {
 
             <div className="h-3 bg-rx-surface rounded-full overflow-hidden flex border border-rx-border">
               <div
-                style={{ width: `${Math.min(100, Math.max(8, (total / 1000) * 100))}%` }}
+                style={{ width: `${Math.min(100, Math.max(8, (total / 100000) * 100))}%` }}
                 className="bg-rx-accent h-full rounded-full transition-all duration-500 shadow-md"
               />
             </div>
             <div className="flex justify-between text-xs text-rx-muted">
-              <span>$0 Baseline</span>
-              <span>Next Milestone: $1,000</span>
+              <span>{formatCurrency(0)} Baseline</span>
+              <span>Next Milestone: {formatCurrency(100000)}</span>
             </div>
           </div>
 
@@ -146,10 +147,10 @@ export const OwnerEarningsPage = () => {
                           {b.vehicle?.make} {b.vehicle?.model}
                         </td>
                         <td className="py-3.5 px-4 text-rx-muted">
-                          {b.rentalDays} days ({new Date(b.startDate).toLocaleDateString()} - {new Date(b.endDate).toLocaleDateString()})
+                          {b.rentalDays} days ({formatDate(b.startDate)} - {formatDate(b.endDate)})
                         </td>
                         <td className="py-3.5 px-4 font-extrabold text-rx-accent text-sm">
-                          ${b.totalAmount}
+                          {formatCurrency(b.totalAmount)}
                         </td>
                         <td className="py-3.5 px-4 text-right">
                           <Badge status={b.paymentStatus}>{b.paymentStatus}</Badge>

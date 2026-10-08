@@ -14,6 +14,7 @@ import RatingStars from '../common/RatingStars';
 import { useComparison } from '../../context/ComparisonContext';
 import { useTheme } from '../../context/ThemeContext';
 import { getVehicleImageUrl } from '../../utils/vehicleImage';
+import { formatCurrency } from '../../utils/format';
 
 export const VehicleCard = ({ vehicle }) => {
   const { isInComparison, toggleVehicle } = useComparison();
@@ -82,10 +83,10 @@ export const VehicleCard = ({ vehicle }) => {
             isCompared
               ? isDark
                 ? 'bg-rx-accent text-rx-on-accent border-rx-accent shadow-lg shadow-rx scale-105 font-bold'
-                : 'bg-rx-accent text-rx-main border-rx-accent shadow-lg shadow-rx scale-105 font-bold'
+                : 'bg-rx-accent text-rx-on-accent border-rx-accent shadow-lg shadow-rx scale-105 font-bold'
               : isDark
-              ? 'bg-rx-page/80 text-rx-muted border-rx-border hover:text-rx-accent hover:bg-rx-card hover:border-rx-accent/60 hover:scale-105'
-              : 'bg-rx-card/95 text-rx-main border-rx-border hover:text-rx-accent hover:bg-rx-card hover:border-rx-accent hover:scale-105 shadow-md'
+              ? 'bg-rx-page/80 text-rx-muted border-rx-border hover:text-rx-main hover:bg-rx-card hover:border-rx-accent/60 hover:scale-105'
+              : 'bg-rx-card/95 text-rx-main border-rx-border hover:text-rx-main hover:bg-rx-card hover:border-rx-accent hover:scale-105 shadow-md'
           }`}
           title={isCompared ? 'Remove from comparison' : 'Compare this vehicle'}
           aria-label={isCompared ? 'Remove from comparison' : 'Compare this vehicle'}
@@ -113,8 +114,8 @@ export const VehicleCard = ({ vehicle }) => {
           <div className="flex items-start justify-between gap-2 mb-1.5">
             <h3 className={`font-bold text-base sm:text-lg transition-colors line-clamp-1 ${
               isDark
-                ? 'text-rx-main group-hover:text-rx-accent'
-                : 'text-rx-main group-hover:text-rx-accent'
+                ? 'text-rx-main group-hover:text-rx-main'
+                : 'text-rx-main group-hover:text-rx-main'
             }`}>
               {vehicle.make} {vehicle.model}
               <span className={`font-normal ml-1.5 text-xs ${isDark ? 'text-rx-muted' : 'text-rx-main'}`}>
@@ -174,7 +175,7 @@ export const VehicleCard = ({ vehicle }) => {
           <div>
             <div className="flex items-baseline gap-1">
               <span className={`text-xl font-extrabold ${isDark ? 'text-rx-accent' : 'text-rx-accent'}`}>
-                ${vehicle.rentalPricePerDay}
+                {formatCurrency(vehicle.rentalPricePerDay)}
               </span>
               <span className={`text-[11px] font-medium ${isDark ? 'text-rx-muted' : 'text-rx-main'}`}>
                 / day
@@ -182,7 +183,7 @@ export const VehicleCard = ({ vehicle }) => {
             </div>
             {vehicle.driverAvailable && vehicle.driverPricePerDay ? (
               <span className={`text-[10px] font-medium block ${isDark ? 'text-rx-muted' : 'text-rx-main'}`}>
-                +${vehicle.driverPricePerDay}/day driver
+                +{formatCurrency(vehicle.driverPricePerDay)}/day driver
               </span>
             ) : null}
           </div>
@@ -192,7 +193,7 @@ export const VehicleCard = ({ vehicle }) => {
             className={`inline-flex items-center justify-center px-4 py-2 rounded-xl font-bold text-xs transition-colors cursor-pointer shadow-md ${
               isDark
                 ? 'bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent'
-                : 'bg-rx-accent hover:bg-rx-accent-hover text-rx-main shadow-rx'
+                : 'bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent shadow-rx'
             }`}
           >
             View Details

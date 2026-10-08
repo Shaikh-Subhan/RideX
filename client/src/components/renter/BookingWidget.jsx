@@ -4,6 +4,8 @@ import { Calendar, UserCheck, ShieldCheck, AlertCircle, ArrowRight } from 'lucid
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import bookingApi from '../../api/bookingApi';
+import { getNextDate } from '../../utils/date';
+import { formatCurrency } from '../../utils/format';
 
 export const BookingWidget = ({ vehicle, onBookingSuccess }) => {
   const { isAuthenticated, user, roles } = useAuth();
@@ -21,6 +23,13 @@ export const BookingWidget = ({ vehicle, onBookingSuccess }) => {
   const [specialRequests, setSpecialRequests] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  const handleStartDateChange = (value) => {
+    setStartDate(value);
+    if (value && endDate <= value) {
+      setEndDate(getNextDate(value));
+    }
+  };
 
   // Calculate rental days
   const start = new Date(startDate);
@@ -90,7 +99,7 @@ export const BookingWidget = ({ vehicle, onBookingSuccess }) => {
       {/* Price Header */}
       <div className="flex items-baseline justify-between pb-5 border-b border-rx-border">
         <div>
-          <span className="text-3xl font-extrabold text-rx-accent">${dailyVehicleRate}</span>
+          <span className="text-3xl font-extrabold text-rx-accent">{formatCurrency(dailyVehicleRate)}</span>
           <span className="text-xs text-rx-muted font-medium"> / day</span>
         </div>
         <div className="text-right">
@@ -120,7 +129,7 @@ export const BookingWidget = ({ vehicle, onBookingSuccess }) => {
               required
               min={new Date().toISOString().split('T')[0]}
               value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              onChange={(e) => handleStartDateChange(e.target.value)}
               className="w-full bg-rx-card px-3 py-2 border border-rx-border rounded-xl text-xs font-semibold text-rx-main focus:outline-none focus:border-rx-accent"
             />
           </div>
@@ -133,7 +142,7 @@ export const BookingWidget = ({ vehicle, onBookingSuccess }) => {
             <input
               type="date"
               required
-              min={startDate || new Date().toISOString().split('T')[0]}
+              min={startDate ? getNextDate(startDate) : new Date().toISOString().split('T')[0]}
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
               className="w-full bg-rx-card px-3 py-2 border border-rx-border rounded-xl text-xs font-semibold text-rx-main focus:outline-none focus:border-rx-accent"
@@ -149,7 +158,7 @@ export const BookingWidget = ({ vehicle, onBookingSuccess }) => {
               <div>
                 <p className="text-xs font-bold text-rx-main">Chauffeur Service</p>
                 <p className="text-[11px] text-rx-muted">
-                  +${vehicle.driverPricePerDay || 0}/day extra
+                  +{formatCurrency(vehicle.driverPricePerDay || 0)}/day extra
                 </p>
               </div>
             </div>
@@ -179,23 +188,23 @@ export const BookingWidget = ({ vehicle, onBookingSuccess }) => {
         <div className="py-4 border-t border-rx-border space-y-2 text-xs">
           <div className="flex justify-between text-rx-muted">
             <span>
-              ${dailyVehicleRate} × {days} {days === 1 ? 'day' : 'days'}
+              {formatCurrency(dailyVehicleRate)} × {days} {days === 1 ? 'day' : 'days'}
             </span>
-            <span className="font-semibold text-rx-main">${estimatedVehicleTotal}</span>
+            <span className="font-semibold text-rx-main">{formatCurrency(estimatedVehicleTotal)}</span>
           </div>
 
           {withDriver && dailyDriverRate > 0 && (
             <div className="flex justify-between text-rx-muted">
               <span>
-                Driver fee (${dailyDriverRate} × {days} days)
+                Driver fee ({formatCurrency(dailyDriverRate)} × {days} days)
               </span>
-              <span className="font-semibold text-rx-main">${estimatedDriverTotal}</span>
+              <span className="font-semibold text-rx-main">{formatCurrency(estimatedDriverTotal)}</span>
             </div>
           )}
 
           <div className="pt-2 border-t border-dashed border-rx-border flex justify-between items-baseline">
             <span className="text-sm font-bold text-rx-main">Estimated Total</span>
-            <span className="text-2xl font-extrabold text-rx-accent">${estimatedGrandTotal}</span>
+            <span className="text-2xl font-extrabold text-rx-accent">{formatCurrency(estimatedGrandTotal)}</span>
           </div>
           <p className="text-[10px] text-rx-muted italic">
             *Final calculations verified by RideX backend engine.

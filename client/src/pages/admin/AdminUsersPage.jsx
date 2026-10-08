@@ -5,6 +5,7 @@ import adminApi from '../../api/adminApi';
 import Badge from '../../components/common/Badge';
 import { TableRowSkeleton } from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
+import { formatDate } from '../../utils/format';
 
 export const AdminUsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -150,7 +151,7 @@ export const AdminUsersPage = () => {
                         </td>
 
                         <td className="py-4 px-4 text-rx-muted font-medium">
-                          {new Date(u.createdAt).toLocaleDateString()}
+                          {formatDate(u.createdAt)}
                         </td>
 
                         <td className="py-4 px-5 text-right">

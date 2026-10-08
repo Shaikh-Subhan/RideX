@@ -8,7 +8,6 @@ import {
   CheckCheck,
   Award,
   ShieldCheck,
-  DollarSign,
   User,
   Phone,
   Mail,
@@ -18,6 +17,7 @@ import OwnerSidebar from '../../components/owner/OwnerSidebar';
 import bookingApi from '../../api/bookingApi';
 import Badge from '../../components/common/Badge';
 import ReviewRenterModal from '../../components/owner/ReviewRenterModal';
+import { formatCurrency, formatDate } from '../../utils/format';
 import { ConfirmDialog } from '../../components/common/Modal';
 import { TableRowSkeleton } from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
@@ -162,8 +162,8 @@ export const OwnerBookingsPage = () => {
                         <div className="flex flex-wrap items-center gap-2 text-xs text-rx-muted">
                           <span className="flex items-center gap-1 font-medium">
                             <Calendar className="w-3.5 h-3.5 text-rx-accent" />
-                            {new Date(b.startDate).toLocaleDateString()} &rarr;{' '}
-                            {new Date(b.endDate).toLocaleDateString()}
+                            {formatDate(b.startDate)} &rarr;{' '}
+                            {formatDate(b.endDate)}
                           </span>
                           <span>&bull;</span>
                           <span>{b.rentalDays} days</span>
@@ -191,7 +191,7 @@ export const OwnerBookingsPage = () => {
                       </div>
 
                       <div className="text-right">
-                        <span className="text-xl font-extrabold text-rx-accent">${b.totalAmount}</span>
+                        <span className="text-xl font-extrabold text-rx-accent">{formatCurrency(b.totalAmount)}</span>
                         <span className="text-xs text-rx-muted ml-1">total payout</span>
                       </div>
                     </div>
@@ -211,7 +211,7 @@ export const OwnerBookingsPage = () => {
                                 message: `Are you sure you want to approve this booking for ${r.name}? The renter will be invited to complete payment.`,
                               })
                             }
-                            className="flex items-center gap-1.5 px-3.5 py-2 bg-rx-accent hover:bg-rx-accent-soft text-rx-main text-xs font-bold rounded-xl transition-all shadow-md cursor-pointer"
+                            className="flex items-center gap-1.5 px-3.5 py-2 bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent text-xs font-bold rounded-xl transition-all shadow-md cursor-pointer"
                           >
                             <Check className="w-4 h-4" />
                             <span>Approve</span>
@@ -227,7 +227,7 @@ export const OwnerBookingsPage = () => {
                                 message: `Decline booking request for ${r.name}? The vehicle dates will remain open for others.`,
                               })
                             }
-                            className="flex items-center gap-1.5 px-3 py-2 border border-rx-accent-border/60 bg-rx-accent-soft/20 text-rx-accent hover:bg-rx-accent-soft/40 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                            className="flex items-center gap-1.5 px-3 py-2 border border-rx-accent-border/60 bg-rx-accent-soft/20 text-rx-main hover:bg-rx-accent-soft/40 text-xs font-bold rounded-xl transition-colors cursor-pointer"
                           >
                             <X className="w-4 h-4" />
                             <span>Decline</span>
@@ -259,7 +259,7 @@ export const OwnerBookingsPage = () => {
                         <button
                           type="button"
                           onClick={() => setSelectedBookingForTrust(b)}
-                          className="flex items-center gap-1.5 px-3.5 py-2 bg-rx-accent hover:bg-rx-accent-soft text-rx-main text-xs font-bold rounded-xl transition-all shadow-md cursor-pointer"
+                          className="flex items-center gap-1.5 px-3.5 py-2 bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent text-xs font-bold rounded-xl transition-all shadow-md cursor-pointer"
                         >
                           <Award className="w-4 h-4" />
                           <span>Evaluate Renter</span>

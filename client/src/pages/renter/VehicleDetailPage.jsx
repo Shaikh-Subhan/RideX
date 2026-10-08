@@ -15,6 +15,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import vehicleApi from '../../api/vehicleApi';
+import { formatCurrency, formatDate } from '../../utils/format';
 import reviewApi from '../../api/reviewApi';
 import RatingStars from '../../components/common/RatingStars';
 import BookingWidget from '../../components/renter/BookingWidget';
@@ -246,7 +247,7 @@ export const VehicleDetailPage = () => {
               <div className="p-3.5 bg-rx-surface rounded-2xl border border-rx-border">
                 <Sparkles className="w-5 h-5 text-rx-accent mb-1.5" />
                 <span className="text-rx-muted block text-[10px] uppercase font-bold">Fuel Economy</span>
-                <span className="font-bold text-rx-main text-sm">{vehicle.mileage || 'Standard'} mpg</span>
+                <span className="font-bold text-rx-main text-sm">{vehicle.mileage || 'Standard'} km/l</span>
               </div>
             </div>
           </div>
@@ -330,7 +331,7 @@ export const VehicleDetailPage = () => {
                       <p className="text-xs text-rx-muted leading-relaxed">{rev.review}</p>
                     )}
                     <span className="text-[10px] text-rx-muted block">
-                      {new Date(rev.createdAt).toLocaleDateString()}
+                      {formatDate(rev.createdAt)}
                     </span>
                   </div>
                 ))}

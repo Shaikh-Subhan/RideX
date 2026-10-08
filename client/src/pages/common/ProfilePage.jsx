@@ -63,7 +63,7 @@ export const ProfilePage = () => {
 
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);
-    success(`Theme switched to ${newTheme === 'dark' ? 'Dark Automotive Luxury' : 'Slate & Burnt Orange Studio'}`);
+    success(`Theme switched to ${newTheme === 'dark' ? 'Navy & Teal Dark' : 'Navy & Teal Light'}`);
   };
 
   const isRenter = roles.includes('renter');
@@ -150,7 +150,7 @@ export const ProfilePage = () => {
           <button
             type="button"
             onClick={logout}
-            className="w-full flex items-center justify-center gap-2 p-3 bg-rx-accent-soft/10 hover:bg-rx-accent-soft/20 text-rx-accent rounded-xl text-xs font-bold border border-rx-accent-border/30 transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 p-3 bg-rx-accent-soft/10 hover:bg-rx-accent-soft/20 text-rx-main rounded-xl text-xs font-bold border border-rx-accent-border/30 transition-colors cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
             <span>Sign out of RideX</span>
@@ -171,8 +171,8 @@ export const ProfilePage = () => {
                   Choose your preferred RideX automotive visual style
                 </p>
               </div>
-              <span className="text-[11px] font-semibold text-rx-accent px-2.5 py-1 rounded-md bg-rx-surface border border-rx-border">
-                {theme === 'dark' ? 'Dark Luxury Active' : 'Slate & Burnt Orange Active'}
+              <span className="text-[11px] font-semibold text-rx-main px-2.5 py-1 rounded-md bg-rx-surface border border-rx-border">
+                {theme === 'dark' ? 'Navy & Teal Dark Active' : 'Navy & Teal Light Active'}
               </span>
             </div>
 
@@ -193,8 +193,8 @@ export const ProfilePage = () => {
                       <Moon className="w-4 h-4" />
                     </div>
                     <div>
-                      <span className="text-sm font-bold text-rx-main block">Dark Luxury</span>
-                      <span className="text-[10px] text-rx-accent font-semibold">Automotive Default</span>
+                      <span className="text-sm font-bold text-rx-main block">Navy & Teal Dark</span>
+                      <span className="text-[10px] text-rx-main font-semibold">Automotive Night</span>
                     </div>
                   </div>
                   {theme === 'dark' && (
@@ -205,15 +205,15 @@ export const ProfilePage = () => {
                 </div>
 
                 <p className="text-xs text-rx-muted leading-relaxed mb-4">
-                  Deep black (#020303) with burnt orange (#F15213) highlights and dark surfaces. High-end automotive cockpit aesthetic.
+                  Navy (#2F4156), teal (#567C8D), and sky blue (#C8D9E6) accents over a deep blue night canvas.
                 </p>
 
                 {/* Swatch preview */}
                 <div className="flex items-center gap-1.5 pt-2 border-t border-rx-border/60">
-                  <span className="w-4 h-4 rounded-full bg-rx-page border border-rx-border" title="#020303 Canvas" />
-                  <span className="w-4 h-4 rounded-full bg-rx-card border border-rx-border" title="Card Surface" />
-                  <span className="w-4 h-4 rounded-full bg-rx-accent" title="Burnt Orange Accent" />
-                  <span className="w-4 h-4 rounded-full bg-rx-card" title="Primary Text" />
+                  <span className="w-4 h-4 rounded-full bg-[#142336] border border-rx-border" title="#142336 Canvas" />
+                  <span className="w-4 h-4 rounded-full bg-[#2f4156] border border-rx-border" title="#2F4156 Navy" />
+                  <span className="w-4 h-4 rounded-full bg-[#567c8d]" title="#567C8D Teal" />
+                  <span className="w-4 h-4 rounded-full bg-[#c8d9e6]" title="#C8D9E6 Sky Blue" />
                   <span className="text-[10px] text-rx-muted ml-auto font-mono">Dark mode</span>
                 </div>
               </button>
@@ -234,8 +234,8 @@ export const ProfilePage = () => {
                       <Sun className="w-4 h-4" />
                     </div>
                     <div>
-                      <span className="text-sm font-bold text-rx-main block">Slate & Burnt Orange</span>
-                      <span className="text-[10px] text-rx-accent font-semibold">Clean Studio Light</span>
+                      <span className="text-sm font-bold text-rx-main block">Navy & Teal Light</span>
+                      <span className="text-[10px] text-rx-main font-semibold">Beige Studio</span>
                     </div>
                   </div>
                   {theme === 'light' && (
@@ -246,15 +246,15 @@ export const ProfilePage = () => {
                 </div>
 
                 <p className="text-xs text-rx-muted leading-relaxed mb-4">
-                  Soft white canvas, crisp white cards, charcoal typography, and a burnt orange accent.
+                  Beige (#F5EFEB) canvas, white cards, navy (#2F4156) controls, and soft sky-blue (#C8D9E6) surfaces.
                 </p>
 
                 {/* Swatch preview */}
                 <div className="flex items-center gap-1.5 pt-2 border-t border-rx-border/60">
-                  <span className="w-4 h-4 rounded-full bg-rx-surface border border-rx-border" title="Light Gray Canvas" />
-                  <span className="w-4 h-4 rounded-full bg-rx-card border border-rx-border" title="White Surface" />
-                  <span className="w-4 h-4 rounded-full bg-rx-accent" title="Burnt Orange Accent" />
-                  <span className="w-4 h-4 rounded-full bg-rx-card" title="Charcoal Text" />
+                  <span className="w-4 h-4 rounded-full bg-[#f5efeb] border border-rx-border" title="#F5EFEB Beige Canvas" />
+                  <span className="w-4 h-4 rounded-full bg-[#ffffff] border border-rx-border" title="#FFFFFF Card Surface" />
+                  <span className="w-4 h-4 rounded-full bg-[#2f4156]" title="#2F4156 Navy Accent" />
+                  <span className="w-4 h-4 rounded-full bg-[#c8d9e6]" title="#C8D9E6 Sky Blue Surface" />
                   <span className="text-[10px] text-rx-muted ml-auto font-mono">Light mode</span>
                 </div>
               </button>

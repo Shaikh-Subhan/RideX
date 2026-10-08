@@ -12,7 +12,7 @@ import {
   X,
   LayoutDashboard,
   CalendarCheck,
-  DollarSign,
+  IndianRupee,
   ShieldCheck,
   PlusCircle,
   FileCheck,
@@ -92,7 +92,7 @@ export const Navbar = () => {
         { label: 'Dashboard', path: '/owner', icon: LayoutDashboard },
         { label: 'My Vehicles', path: '/owner/vehicles', icon: Car },
         { label: 'Bookings', path: '/owner/bookings', icon: CalendarCheck },
-        { label: 'Earnings', path: '/owner/earnings', icon: DollarSign },
+        { label: 'Earnings', path: '/owner/earnings', icon: IndianRupee },
       ];
     }
 
@@ -165,7 +165,7 @@ export const Navbar = () => {
                   to={link.path}
                   className={`flex items-center gap-2 px-2.5 2xl:px-3.5 py-2.5 rounded-xl text-sm font-bold transition-all ${
                     isActive
-                      ? 'bg-rx-card text-rx-accent border border-rx-border'
+                      ? 'bg-rx-card text-rx-main border border-rx-border'
                       : 'text-rx-muted hover:text-rx-main hover:bg-rx-card/60'
                   }`}
                 >
@@ -252,12 +252,12 @@ export const Navbar = () => {
             <button
               type="button"
               onClick={toggleTheme}
-              className="hidden sm:flex p-2 text-rx-muted hover:text-rx-accent hover:bg-rx-card rounded-xl transition-colors items-center justify-center border border-rx-transparent hover:border-rx-border cursor-pointer"
-              title={`Switch to ${isDark ? 'Slate & Burnt Orange' : 'Dark Luxury'} theme`}
+              className="hidden sm:flex p-2 text-rx-muted hover:text-rx-main hover:bg-rx-card rounded-xl transition-colors items-center justify-center border border-rx-transparent hover:border-rx-border cursor-pointer"
+              title={`Switch to ${isDark ? 'Navy & Teal Light' : 'Navy & Teal Dark'} theme`}
               aria-label="Toggle visual theme"
             >
               {isDark ? (
-                <Sun className="w-5 h-5 text-rx-accent" />
+                <Sun className="w-5 h-5 text-rx-main" />
               ) : (
                 <Moon className="w-5 h-5 text-rx-main" />
               )}
@@ -271,7 +271,7 @@ export const Navbar = () => {
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                   className="flex items-center gap-2 p-1 rounded-full hover:bg-rx-card border border-rx-border transition-colors cursor-pointer 2xl:gap-2.5 2xl:p-1.5 2xl:pr-3"
                 >
-                  <div className="w-8 h-8 rounded-full bg-rx-surface border border-rx-border text-rx-accent flex items-center justify-center font-bold text-xs uppercase overflow-hidden">
+                  <div className="w-8 h-8 rounded-full bg-rx-surface border border-rx-border text-rx-main flex items-center justify-center font-bold text-xs uppercase overflow-hidden">
                     {user?.profileImage ? (
                       <img
                         src={user.profileImage}
@@ -286,7 +286,7 @@ export const Navbar = () => {
                     <div className="text-sm font-bold text-rx-main leading-tight truncate max-w-[110px]">
                       {user?.name?.split(' ')[0]}
                     </div>
-                    <div className="text-xs font-bold text-rx-accent capitalize">
+                    <div className="text-xs font-bold text-rx-main capitalize">
                       {currentRole}
                     </div>
                   </div>
@@ -307,9 +307,9 @@ export const Navbar = () => {
                             key={r}
                             className={`text-[9px] px-2 py-0.5 rounded font-extrabold uppercase border ${
                               r === 'admin'
-                                ? 'bg-rx-accent-soft/60 text-rx-accent border-rx-accent-border'
+                                ? 'bg-rx-accent-soft/60 text-rx-main border-rx-accent-border'
                                 : r === 'owner'
-                                ? 'bg-rx-accent-soft/60 text-rx-accent border-rx-accent-border'
+                                ? 'bg-rx-accent-soft/60 text-rx-main border-rx-accent-border'
                                 : 'bg-rx-surface text-rx-muted border-rx-border'
                             }`}
                           >
@@ -367,7 +367,7 @@ export const Navbar = () => {
                             switchRole('admin');
                             navigate('/admin');
                           }}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-rx-accent hover:bg-rx-surface rounded-lg text-left cursor-pointer"
+                          className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-rx-main hover:bg-rx-surface rounded-lg text-left cursor-pointer"
                         >
                           <ShieldCheck className="w-4 h-4 text-rx-accent" />
                           Admin Console
@@ -388,7 +388,7 @@ export const Navbar = () => {
                       {!roles.includes('owner') && !roles.includes('admin') && (
                         <Link
                           to="/profile"
-                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-rx-accent hover:bg-rx-surface transition-colors"
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-rx-main hover:bg-rx-surface transition-colors"
                         >
                           <PlusCircle className="w-4 h-4 text-rx-accent" />
                           List your car on RideX
@@ -398,7 +398,7 @@ export const Navbar = () => {
                       <button
                         type="button"
                         onClick={logout}
-                        className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-rx-accent hover:bg-rx-accent-soft/20 transition-colors cursor-pointer text-left"
+                        className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-rx-main hover:bg-rx-accent-soft/20 transition-colors cursor-pointer text-left"
                       >
                         <LogOut className="w-4 h-4 text-rx-accent" />
                         Log out
@@ -446,17 +446,17 @@ export const Navbar = () => {
             <button
               type="button"
               onClick={toggleTheme}
-              className="flex items-center gap-2 px-3 py-1 text-xs font-bold rounded-lg bg-rx-surface text-rx-accent border border-rx-border"
+              className="flex items-center gap-2 px-3 py-1 text-xs font-bold rounded-lg bg-rx-surface text-rx-main border border-rx-border"
             >
               {isDark ? (
                 <>
                   <Moon className="w-3.5 h-3.5" />
-                  <span>Dark Luxury</span>
+                  <span>Navy & Teal Dark</span>
                 </>
               ) : (
                 <>
                   <Sun className="w-3.5 h-3.5" />
-                  <span>Slate & Burnt Orange</span>
+                  <span>Navy & Teal Light</span>
                 </>
               )}
             </button>
@@ -474,7 +474,7 @@ export const Navbar = () => {
                   to={link.path}
                   className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold ${
                     isActive
-                      ? 'bg-rx-card text-rx-accent border border-rx-border'
+                      ? 'bg-rx-card text-rx-main border border-rx-border'
                       : 'text-rx-muted hover:bg-rx-card'
                   }`}
                 >

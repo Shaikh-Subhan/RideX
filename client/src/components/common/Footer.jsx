@@ -31,13 +31,13 @@ export const Footer = () => {
             <h4 className="text-xs font-bold text-rx-main uppercase tracking-wider">For Renters</h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <Link to="/cars" className="hover:text-rx-accent transition-colors">Explore All Cars</Link>
+                <Link to="/cars" className="hover:text-rx-main transition-colors">Explore All Cars</Link>
               </li>
               <li>
-                <Link to="/compare" className="hover:text-rx-accent transition-colors">Compare Models</Link>
+                <Link to="/compare" className="hover:text-rx-main transition-colors">Compare Models</Link>
               </li>
               <li>
-                <Link to="/bookings" className="hover:text-rx-accent transition-colors">My Bookings</Link>
+                <Link to="/bookings" className="hover:text-rx-main transition-colors">My Bookings</Link>
               </li>
               <li>
                 <span className="text-rx-muted">Self-Drive & With-Driver options</span>
@@ -50,13 +50,13 @@ export const Footer = () => {
             <h4 className="text-xs font-bold text-rx-main uppercase tracking-wider">For Car Owners</h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <Link to="/owner" className="hover:text-rx-accent transition-colors">Host Dashboard</Link>
+                <Link to="/owner" className="hover:text-rx-main transition-colors">Host Dashboard</Link>
               </li>
               <li>
-                <Link to="/owner/vehicles" className="hover:text-rx-accent transition-colors">Manage Fleet</Link>
+                <Link to="/owner/vehicles" className="hover:text-rx-main transition-colors">Manage Fleet</Link>
               </li>
               <li>
-                <Link to="/owner/earnings" className="hover:text-rx-accent transition-colors">Host Earnings</Link>
+                <Link to="/owner/earnings" className="hover:text-rx-main transition-colors">Host Earnings</Link>
               </li>
               <li>
                 <span className="text-rx-muted">Verified document onboarding</span>
@@ -83,11 +83,11 @@ export const Footer = () => {
         <div className="border-t border-rx-border mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-rx-muted">
           <p>&copy; {new Date().getFullYear()} RideX Automotive Marketplace. All rights reserved.</p>
           <div className="flex items-center gap-5 text-xs text-rx-muted">
-            <Link to="/cars" className="hover:text-rx-accent transition-colors">Browse Marketplace</Link>
+            <Link to="/cars" className="hover:text-rx-main transition-colors">Browse Marketplace</Link>
             <span aria-hidden="true" className="text-rx-main">·</span>
-            <Link to="/compare" className="hover:text-rx-accent transition-colors">Compare Fleet</Link>
+            <Link to="/compare" className="hover:text-rx-main transition-colors">Compare Fleet</Link>
             <span aria-hidden="true" className="text-rx-main">·</span>
-            <Link to="/login" className="hover:text-rx-accent transition-colors">Sign In</Link>
+            <Link to="/login" className="hover:text-rx-main transition-colors">Sign In</Link>
           </div>
         </div>
       </div>

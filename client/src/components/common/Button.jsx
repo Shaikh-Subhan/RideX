@@ -33,16 +33,16 @@ export const Button = ({
       'bg-rx-surface text-rx-main hover:bg-rx-border active:bg-rx-card border border-rx-border hover:border-rx-border-strong',
     // Dark Outline Button with Amber Hover
     outline:
-      'bg-rx-transparent text-rx-main hover:text-rx-accent hover:bg-rx-card active:bg-rx-surface border border-rx-border hover:border-rx-accent/60',
+      'bg-rx-transparent text-rx-main hover:text-rx-main hover:bg-rx-card active:bg-rx-surface border border-rx-border hover:border-rx-accent/60',
     // Danger / Destructive Button
     danger:
-      'bg-rx-accent-soft/10 text-rx-accent hover:bg-rx-accent hover:text-rx-main border border-rx-accent-border/30 hover:border-rx-accent-border',
+      'bg-rx-accent-soft/10 text-rx-main hover:bg-rx-accent hover:text-rx-on-accent border border-rx-accent-border/30 hover:border-rx-accent-border',
     // Ghost Minimal Button
     ghost:
       'bg-rx-transparent text-rx-muted hover:text-rx-main hover:bg-rx-card active:bg-rx-surface border border-rx-transparent',
     // Success Button
     success:
-      'bg-rx-accent-soft/10 text-rx-accent hover:bg-rx-accent hover:text-rx-main border border-rx-accent-border/30 hover:border-rx-accent-border',
+      'bg-rx-accent-soft/10 text-rx-main hover:bg-rx-accent hover:text-rx-on-accent border border-rx-accent-border/30 hover:border-rx-accent-border',
   };
 
   return (

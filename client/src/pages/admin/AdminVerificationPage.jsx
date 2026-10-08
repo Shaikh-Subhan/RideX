@@ -23,6 +23,7 @@ import EmptyState from "../../components/common/EmptyState";
 import Badge from "../../components/common/Badge";
 import {TableRowSkeleton} from "../../components/common/Skeleton";
 import {useToast} from "../../context/ToastContext";
+import { formatCurrency, formatDate } from '../../utils/format';
 
 export const AdminVerificationPage = () => {
   const [activeTab, setActiveTab] = useState("pending");
@@ -363,7 +364,7 @@ export const AdminVerificationPage = () => {
                       <div className="flex items-center gap-3">
                         <div className="text-right">
                           <span className="text-sm font-extrabold text-rx-accent">
-                            ${v.rentalPricePerDay}/day
+                            {formatCurrency(v.rentalPricePerDay)}/day
                           </span>
 
                           <span className="text-[10px] text-rx-muted block">
@@ -432,7 +433,7 @@ export const AdminVerificationPage = () => {
                                     "registrationDocument",
                                   )
                                 }
-                                className="p-1.5 text-rx-muted hover:text-rx-accent transition-colors disabled:opacity-50 cursor-pointer"
+                                className="p-1.5 text-rx-muted hover:text-rx-main transition-colors disabled:opacity-50 cursor-pointer"
                                 title="Open in new tab">
                                 <ExternalLink className="w-3.5 h-3.5" />
                               </button>
@@ -492,7 +493,7 @@ export const AdminVerificationPage = () => {
                                 onClick={() =>
                                   openDocumentInNewTab(v, "insuranceDocument")
                                 }
-                                className="p-1.5 text-rx-muted hover:text-rx-accent transition-colors disabled:opacity-50 cursor-pointer"
+                                className="p-1.5 text-rx-muted hover:text-rx-main transition-colors disabled:opacity-50 cursor-pointer"
                                 title="Open in new tab">
                                 <ExternalLink className="w-3.5 h-3.5" />
                               </button>
@@ -511,7 +512,7 @@ export const AdminVerificationPage = () => {
                           <span className="inline-flex items-center gap-1 text-rx-accent">
                             <CheckCircle2 className="w-3.5 h-3.5" />
                             Verified on{" "}
-                            {new Date(verif.verifiedAt).toLocaleDateString()}
+                            {formatDate(verif.verifiedAt)}
                           </span>
                         : <span className="inline-flex items-center gap-1 text-rx-accent">
                             <Clock className="w-3.5 h-3.5" />
@@ -532,7 +533,7 @@ export const AdminVerificationPage = () => {
                                 message: `Decline verification for ${v.make} ${v.model} (${v.vehicleNumber || "No Plate"})? The host will be notified immediately.`,
                               })
                             }
-                            className="flex items-center gap-1.5 px-4 py-2 border border-rx-accent-border/60 bg-rx-accent-soft/20 text-rx-accent hover:bg-rx-accent-soft/40 rounded-xl text-xs font-bold transition-colors cursor-pointer shadow-xs">
+                            className="flex items-center gap-1.5 px-4 py-2 border border-rx-accent-border/60 bg-rx-accent-soft/20 text-rx-main hover:bg-rx-accent-soft/40 rounded-xl text-xs font-bold transition-colors cursor-pointer shadow-xs">
                             <X className="w-4 h-4" />
                             <span>Reject Documents</span>
                           </button>
@@ -547,7 +548,7 @@ export const AdminVerificationPage = () => {
                                 message: `Confirm that documents for ${v.make} ${v.model} (${v.vehicleNumber || "No Plate"}) are authentic. The host will receive the Verified Badge and the vehicle will go live on the marketplace.`,
                               })
                             }
-                            className="flex items-center gap-1.5 px-5 py-2 bg-rx-accent hover:bg-rx-accent-soft text-rx-main rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer">
+                            className="flex items-center gap-1.5 px-5 py-2 bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer">
                             <Check className="w-4 h-4" />
                             <span>Approve & Verify Vehicle</span>
                           </button>
@@ -596,7 +597,7 @@ export const AdminVerificationPage = () => {
                 href={previewDoc.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-rx-accent hover:underline">
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-rx-main hover:underline">
                 <ExternalLink className="w-4 h-4" />
                 <span>Open Original File in New Tab</span>
               </a>

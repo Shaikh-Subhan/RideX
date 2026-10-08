@@ -15,6 +15,7 @@ import {
 import notificationApi from '../../api/notificationApi';
 import EmptyState from '../../components/common/EmptyState';
 import { useToast } from '../../context/ToastContext';
+import { formatDateTime } from '../../utils/format';
 
 export const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -161,7 +162,7 @@ export const NotificationsPage = () => {
                     <div className="pt-2">
                       <Link
                         to="/owner/vehicles"
-                        className="inline-flex items-center gap-1.5 px-3 py-1 bg-rx-surface hover:bg-rx-border text-rx-accent border border-rx-border text-xs font-bold rounded-lg transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3 py-1 bg-rx-surface hover:bg-rx-border text-rx-main border border-rx-border text-xs font-bold rounded-lg transition-colors"
                       >
                         <span>Go to My Vehicles</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -182,7 +183,7 @@ export const NotificationsPage = () => {
                   )}
 
                   <span className="text-[10px] text-rx-muted block pt-1">
-                    {new Date(n.createdAt).toLocaleString()}
+                    {formatDateTime(n.createdAt)}
                   </span>
                 </div>
               </div>
@@ -191,7 +192,7 @@ export const NotificationsPage = () => {
                 <button
                   type="button"
                   onClick={() => handleMarkAsRead(n._id)}
-                  className="p-1.5 text-rx-muted hover:text-rx-accent rounded-lg hover:bg-rx-surface transition-colors cursor-pointer shrink-0"
+                  className="p-1.5 text-rx-muted hover:text-rx-main rounded-lg hover:bg-rx-surface transition-colors cursor-pointer shrink-0"
                   title="Mark as read"
                 >
                   <CheckCircle2 className="w-4 h-4" />

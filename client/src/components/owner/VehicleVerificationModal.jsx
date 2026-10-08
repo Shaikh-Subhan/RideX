@@ -217,7 +217,7 @@ export const VehicleVerificationModal = ({
                 type="button"
                 onClick={() => regInputRef.current?.click()}
                 disabled={submitting}
-                className="text-xs text-rx-accent hover:underline font-bold shrink-0 cursor-pointer disabled:opacity-50">
+                className="text-xs text-rx-main hover:underline font-bold shrink-0 cursor-pointer disabled:opacity-50">
                 Change
               </button>
             </div>
@@ -265,7 +265,7 @@ export const VehicleVerificationModal = ({
                 type="button"
                 onClick={() => insInputRef.current?.click()}
                 disabled={submitting}
-                className="text-xs text-rx-accent hover:underline font-bold shrink-0 cursor-pointer disabled:opacity-50">
+                className="text-xs text-rx-main hover:underline font-bold shrink-0 cursor-pointer disabled:opacity-50">
                 Change
               </button>
             </div>

@@ -88,7 +88,7 @@ export const ConfirmDialog = ({
           onClick={onConfirm}
           className={`px-5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer shadow-md ${
             isDanger
-              ? 'bg-rx-accent hover:bg-rx-accent-dark text-rx-main'
+              ? 'bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent'
               : 'bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent'
           }`}
         >

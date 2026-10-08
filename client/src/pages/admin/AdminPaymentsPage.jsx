@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { CreditCard, ChevronLeft, ChevronRight, DollarSign } from 'lucide-react';
+import { CreditCard, ChevronLeft, ChevronRight } from 'lucide-react';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import adminApi from '../../api/adminApi';
 import Badge from '../../components/common/Badge';
 import { TableRowSkeleton } from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
+import { formatCurrency, formatDate } from '../../utils/format';
 
 export const AdminPaymentsPage = () => {
   const [payments, setPayments] = useState([]);
@@ -124,16 +125,16 @@ export const AdminPaymentsPage = () => {
                           <td className="py-4 px-4 space-y-0.5">
                             <div className="flex items-center gap-1.5">
                               <span className="text-rx-muted text-[10px]">Total:</span>
-                              <strong className="text-rx-main font-bold">${p.totalAmount}</strong>
+                              <strong className="text-rx-main font-bold">{formatCurrency(p.totalAmount)}</strong>
                             </div>
                             <div className="flex items-center gap-1.5">
                               <span className="text-rx-muted text-[10px]">Paid:</span>
-                              <span className="text-rx-accent font-bold">${p.paidAmount}</span>
+                              <span className="text-rx-accent font-bold">{formatCurrency(p.paidAmount)}</span>
                             </div>
                             {p.remainingAmount > 0 && (
                               <div className="flex items-center gap-1.5">
                                 <span className="text-rx-muted text-[10px]">Due:</span>
-                                <span className="text-rx-accent font-semibold">${p.remainingAmount}</span>
+                                <span className="text-rx-accent font-semibold">{formatCurrency(p.remainingAmount)}</span>
                               </div>
                             )}
                           </td>
@@ -143,7 +144,7 @@ export const AdminPaymentsPage = () => {
                               {p.method || 'Demo'}
                             </span>
                             <span className="text-[10px] text-rx-muted block">
-                              {new Date(p.createdAt).toLocaleDateString()}
+                              {formatDate(p.createdAt)}
                             </span>
                           </td>
 

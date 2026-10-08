@@ -1,10 +1,12 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { CheckCircle2, AlertCircle, Info, AlertTriangle, X } from 'lucide-react';
+import { useTheme } from './ThemeContext';
 
 const ToastContext = createContext(null);
 
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
+  const { isDark } = useTheme();
 
   const showToast = useCallback((message, type = 'info', duration = 4000) => {
     const id = Date.now() + Math.random().toString(36).substring(2, 9);
@@ -36,14 +38,11 @@ export const ToastProvider = ({ children }) => {
           let icon = <Info className="w-5 h-5 text-rx-accent shrink-0" />;
 
           if (toast.type === 'success') {
-            bg = 'bg-rx-accent-dark/95 text-rx-accent border-rx-accent-border';
             icon = <CheckCircle2 className="w-5 h-5 text-rx-accent shrink-0" />;
           } else if (toast.type === 'error') {
-            bg = 'bg-rx-accent-dark/95 text-rx-accent border-rx-accent-border';
-            icon = <AlertCircle className="w-5 h-5 text-rx-accent shrink-0" />;
+            icon = <AlertCircle className={`w-5 h-5 ${isDark ? 'text-red-400' : 'text-red-600'} shrink-0`} />;
           } else if (toast.type === 'warning') {
-            bg = 'bg-rx-accent-dark/95 text-rx-accent border-rx-accent-border';
-            icon = <AlertTriangle className="w-5 h-5 text-rx-accent shrink-0" />;
+            icon = <AlertTriangle className={`w-5 h-5 ${isDark ? 'text-amber-400' : 'text-amber-600'} shrink-0`} />;
           }
 
           return (
@@ -52,7 +51,7 @@ export const ToastProvider = ({ children }) => {
               className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl border shadow-xl backdrop-blur-sm transition-all duration-300 animate-in fade-in slide-in-from-bottom-5 ${bg}`}
             >
               {icon}
-              <div className="flex-1 text-sm font-medium leading-relaxed">{toast.message}</div>
+              <div className="flex-1 text-sm font-medium leading-relaxed text-rx-main">{toast.message}</div>
               <button
                 onClick={() => removeToast(toast.id)}
                 className="opacity-70 hover:opacity-100 transition-opacity p-0.5"

@@ -11,6 +11,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import bookingApi from '../../api/bookingApi';
+import { formatCurrency, formatDate } from '../../utils/format';
 import Badge from '../../components/common/Badge';
 import { ConfirmDialog } from '../../components/common/Modal';
 import PaymentModal from '../../components/renter/PaymentModal';
@@ -154,8 +155,8 @@ export const MyBookingsPage = () => {
                     <div className="flex flex-wrap items-center gap-3 text-xs text-rx-muted">
                       <span className="flex items-center gap-1 font-medium">
                         <Calendar className="w-3.5 h-3.5 text-rx-accent" />
-                        {new Date(b.startDate).toLocaleDateString()} &rarr;{' '}
-                        {new Date(b.endDate).toLocaleDateString()}
+                        {formatDate(b.startDate)} &rarr;{' '}
+                        {formatDate(b.endDate)}
                       </span>
                       <span>&bull;</span>
                       <span>{b.rentalDays} {b.rentalDays === 1 ? 'day' : 'days'}</span>
@@ -183,7 +184,7 @@ export const MyBookingsPage = () => {
                   </div>
 
                   <div>
-                    <span className="text-xl font-extrabold text-rx-accent">${b.totalAmount}</span>
+                    <span className="text-xl font-extrabold text-rx-accent">{formatCurrency(b.totalAmount)}</span>
                     <span className="text-xs text-rx-muted ml-1">total</span>
                   </div>
                 </div>
@@ -195,7 +196,7 @@ export const MyBookingsPage = () => {
                     <button
                       type="button"
                       onClick={() => setSelectedBookingForPayment(b)}
-                      className="flex items-center gap-1.5 px-4 py-2 bg-rx-accent hover:bg-rx-accent-soft text-rx-main text-xs font-bold rounded-xl transition-all shadow-md cursor-pointer"
+                      className="flex items-center gap-1.5 px-4 py-2 bg-rx-accent hover:bg-rx-accent-hover text-rx-on-accent text-xs font-bold rounded-xl transition-all shadow-md cursor-pointer"
                     >
                       <CreditCard className="w-4 h-4" />
                       <span>Pay Now</span>
@@ -219,7 +220,7 @@ export const MyBookingsPage = () => {
                     <button
                       type="button"
                       onClick={() => setCancellingBookingId(b._id)}
-                      className="flex items-center gap-1.5 px-3 py-2 border border-rx-accent-border/60 bg-rx-accent-soft/20 text-rx-accent hover:bg-rx-accent-soft/40 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                      className="flex items-center gap-1.5 px-3 py-2 border border-rx-accent-border/60 bg-rx-accent-soft/20 text-rx-main hover:bg-rx-accent-soft/40 text-xs font-bold rounded-xl transition-colors cursor-pointer"
                     >
                       <Ban className="w-3.5 h-3.5" />
                       <span>Cancel</span>

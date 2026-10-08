@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { CreditCard, CheckCircle2, ShieldCheck, DollarSign, AlertCircle } from 'lucide-react';
+import { CreditCard, CheckCircle2, ShieldCheck, IndianRupee, AlertCircle } from 'lucide-react';
 import Modal from '../common/Modal';
 import paymentApi from '../../api/paymentApi';
 import { useToast } from '../../context/ToastContext';
+import { formatCurrency } from '../../utils/format';
 
 export const PaymentModal = ({ isOpen, onClose, booking, onSuccess }) => {
   const [payment, setPayment] = useState(null);
@@ -121,11 +122,11 @@ export const PaymentModal = ({ isOpen, onClose, booking, onSuccess }) => {
             </div>
             <div className="flex justify-between">
               <span className="text-rx-muted">Total Paid:</span>
-              <span className="font-bold text-rx-accent">${successPayment.paidAmount}</span>
+              <span className="font-bold text-rx-accent">{formatCurrency(successPayment.paidAmount)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-rx-muted">Remaining Balance:</span>
-              <span className="font-semibold text-rx-muted">${successPayment.remainingAmount}</span>
+              <span className="font-semibold text-rx-muted">{formatCurrency(successPayment.remainingAmount)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-rx-muted">Status:</span>
@@ -160,16 +161,16 @@ export const PaymentModal = ({ isOpen, onClose, booking, onSuccess }) => {
             </div>
             <div className="flex justify-between text-rx-muted">
               <span>Total Booking Amount:</span>
-              <span className="font-bold text-rx-main">${payment?.totalAmount ?? booking.totalAmount}</span>
+              <span className="font-bold text-rx-main">{formatCurrency(payment?.totalAmount ?? booking.totalAmount)}</span>
             </div>
             <div className="flex justify-between text-rx-muted">
               <span>Already Paid:</span>
-              <span className="font-semibold text-rx-accent">${payment?.paidAmount ?? 0}</span>
+              <span className="font-semibold text-rx-accent">{formatCurrency(payment?.paidAmount ?? 0)}</span>
             </div>
             <div className="pt-2 border-t border-rx-border flex justify-between items-baseline">
               <span className="font-bold text-rx-main">Remaining Due:</span>
               <span className="text-xl font-extrabold text-rx-accent">
-                ${payment?.remainingAmount ?? booking.totalAmount}
+                {formatCurrency(payment?.remainingAmount ?? booking.totalAmount)}
               </span>
             </div>
           </div>
@@ -190,7 +191,7 @@ export const PaymentModal = ({ isOpen, onClose, booking, onSuccess }) => {
                   onClick={() => setPaymentMethod(m.id)}
                   className={`p-2.5 rounded-xl border text-xs font-semibold text-left transition-all cursor-pointer ${
                     paymentMethod === m.id
-                      ? 'bg-rx-accent-soft/40 border-rx-accent text-rx-accent shadow-sm'
+                      ? 'bg-rx-accent-soft/40 border-rx-accent text-rx-main shadow-sm'
                       : 'bg-rx-surface border-rx-border text-rx-muted hover:border-rx-accent/40'
                   }`}
                 >
@@ -202,9 +203,9 @@ export const PaymentModal = ({ isOpen, onClose, booking, onSuccess }) => {
 
           {/* Amount Input */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-rx-muted">Amount to Pay ($)</label>
+            <label className="text-xs font-bold text-rx-muted">Amount to Pay (₹)</label>
             <div className="relative">
-              <DollarSign className="w-4 h-4 text-rx-muted absolute left-3 top-1/2 -translate-y-1/2" />
+              <IndianRupee className="w-4 h-4 text-rx-muted absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="number"
                 step="1"
@@ -234,7 +235,7 @@ export const PaymentModal = ({ isOpen, onClose, booking, onSuccess }) => {
               disabled={paying || !payment}
               className="px-5 py-2.5 text-xs font-bold text-rx-on-accent bg-rx-accent hover:bg-rx-accent-hover rounded-xl transition-colors shadow-md cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
             >
-              {paying ? 'Authorizing Payment...' : `Pay $${payAmount} Now`}
+              {paying ? 'Authorizing Payment...' : `Pay ${formatCurrency(payAmount)} Now`}
             </button>
           </div>
 

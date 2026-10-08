@@ -122,8 +122,8 @@ export const CustomSelect = ({
             <span
               className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider ${
                 isDark
-                  ? 'bg-rx-accent/15 text-rx-accent border border-rx-accent/30'
-                  : 'bg-rx-accent-soft text-rx-accent border border-rx-accent-border'
+                  ? 'bg-rx-accent/15 text-rx-main border border-rx-accent/30'
+                  : 'bg-rx-accent-soft text-rx-main border border-rx-accent-border'
               }`}
             >
               {selectedOption.badge}
@@ -133,7 +133,7 @@ export const CustomSelect = ({
 
         <ChevronDown
           className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
-            isOpen ? 'rotate-180 text-rx-accent' : isDark ? 'text-rx-muted' : 'text-rx-muted'
+            isOpen             ? 'rotate-180 text-rx-main' : isDark ? 'text-rx-muted' : 'text-rx-muted'
           }`}
         />
       </button>
@@ -164,8 +164,8 @@ export const CustomSelect = ({
                   className={`group flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium cursor-pointer transition-all duration-150 ${
                     isSelected
                       ? isDark
-                        ? 'bg-rx-accent/15 text-rx-accent font-bold'
-                        : 'bg-rx-accent-soft text-rx-accent font-bold'
+                        ? 'bg-rx-accent/15 text-rx-main font-bold'
+                        : 'bg-rx-accent-soft text-rx-main font-bold'
                       : isDark
                       ? 'text-rx-main hover:bg-rx-surface hover:text-rx-main'
                       : 'text-rx-main hover:bg-rx-surface hover:text-rx-main'
@@ -196,7 +196,7 @@ export const CustomSelect = ({
                           isSelected
                             ? isDark
                               ? 'bg-rx-accent text-rx-on-accent'
-                              : 'bg-rx-accent text-rx-main'
+                              : 'bg-rx-accent text-rx-on-accent'
                             : isDark
                             ? 'bg-rx-border text-rx-muted'
                             : 'bg-rx-surface text-rx-muted'
